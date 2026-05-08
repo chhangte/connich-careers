@@ -92,8 +92,8 @@ const Signup = ({ setUser }) => {
 
         <div className="w-full max-w-sm animate-fade-up">
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-text mb-1">Create your account</h1>
-            {/*<p className="text-sm text-text-muted">Start your journey with Connich today</p> */}
+            <h1 className="text-2xl font-bold text-text mb-2">Create your account</h1>
+            <p className="text-sm text-text-muted">Create an account to apply for jobs and track your applications.</p>
           </div>
 
           {error && (
@@ -193,10 +193,17 @@ const Signup = ({ setUser }) => {
             <a href="#" className="underline text-text-muted hover:text-text">Privacy Policy</a>.
           </p>
 
-          <p className="mt-6 text-center text-sm text-text-muted">
-            Already have an account?{' '}
-            <Link to="/login" className="text-accent font-medium hover:text-accent-hover no-underline">Sign in</Link>
-          </p>
+          <div className="mt-10 pt-8 border-t border-border">
+            <p className="text-center text-sm text-text-muted mb-4">
+              Already have an account?
+            </p>
+            <Link 
+              to={`/login${redirectTo ? `?redirect=${redirectTo}` : ''}`} 
+              className="btn-outline w-full justify-center no-underline text-text hover:text-text"
+            >
+              Sign in to your account
+            </Link>
+          </div>
         </div>
       </div>
     </div>

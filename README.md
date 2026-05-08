@@ -1,4 +1,4 @@
-# Careers Portal - Kids Den School
+# Careers Portal
 
 This is a full-stack Job Application Portal built with React (Frontend) and Express (Backend).
 

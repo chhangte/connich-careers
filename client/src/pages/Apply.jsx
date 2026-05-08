@@ -44,30 +44,28 @@ const Apply = ({ user }) => {
     // Personal
     name: user?.name || '',
     email: user?.email || '',
-    phone: '',
-    locality: '',
-    city: '',
-    state: '',
-    dob: '',
-    maritalStatus: '',
+    phone: user?.profile?.phone || '',
+    address: user?.profile?.address || '',
+    dob: user?.profile?.dob || '',
+    maritalStatus: user?.profile?.maritalStatus || '',
     // Family
-    fatherName: '',
-    fatherPhone: '',
-    motherName: '',
-    motherPhone: '',
+    fatherName: user?.profile?.fatherName || '',
+    fatherPhone: user?.profile?.fatherPhone || '',
+    motherName: user?.profile?.motherName || '',
+    motherPhone: user?.profile?.motherPhone || '',
     // Education
-    highestQualification: '',
-    discipline: '',
-    primarySchool: '',
-    middleSchool: '',
-    highSchool: '',
-    higherSecondarySchool: '',
-    undergraduateInstitute: '',
-    postgraduateInstitute: '',
+    highestQualification: user?.profile?.highestQualification || '',
+    discipline: user?.profile?.discipline || '',
+    primarySchool: user?.profile?.primarySchool || '',
+    middleSchool: user?.profile?.middleSchool || '',
+    highSchool: user?.profile?.highSchool || '',
+    higherSecondarySchool: user?.profile?.higherSecondarySchool || '',
+    undergraduateInstitute: user?.profile?.undergraduateInstitute || '',
+    postgraduateInstitute: user?.profile?.postgraduateInstitute || '',
     // Experience
-    experience: '',
-    referenceeName: '',
-    referencePhone: '',
+    experience: user?.profile?.experience || '',
+    referenceeName: user?.profile?.referenceeName || '',
+    referencePhone: user?.profile?.referencePhone || '',
   });
 
   useEffect(() => {
@@ -102,7 +100,6 @@ const Apply = ({ user }) => {
         details: {
           ...form,
           highestQualification: qual,
-          address: [form.locality, form.city, form.state].filter(Boolean).join(', '),
         },
       });
       setSubmitted(true);
@@ -113,6 +110,8 @@ const Apply = ({ user }) => {
       setSubmitting(false);
     }
   };
+
+  const hasField = (f) => !job?.applicationFields || job.applicationFields.length === 0 || job.applicationFields.includes(f);
 
   if (jobLoading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -203,70 +202,74 @@ const Apply = ({ user }) => {
                 <input type="email" value={form.email} readOnly
                   className={`${inputCls} bg-surface-2 text-text-muted cursor-not-allowed`} />
               </Field>
-              <Field label="Phone Number" required>
-                <input type="tel" required value={form.phone} onChange={set('phone')}
-                  placeholder="+91 98765 43210" className={inputCls} />
-              </Field>
-              <Field label="Date of Birth" required hint="DD/MM/YYYY">
-                <input type="text" required value={form.dob} onChange={set('dob')}
-                  placeholder="DD/MM/YYYY" maxLength={10}
-                  pattern="\d{2}/\d{2}/\d{4}"
-                  className={inputCls} />
-              </Field>
+              {hasField('phone') && (
+                <Field label="Phone Number" required>
+                  <input type="tel" required value={form.phone} onChange={set('phone')}
+                    placeholder="+91 98765 43210" className={inputCls} />
+                </Field>
+              )}
+              {hasField('dob') && (
+                <Field label="Date of Birth" required hint="DD/MM/YYYY">
+                  <input type="text" required value={form.dob} onChange={set('dob')}
+                    placeholder="DD/MM/YYYY" maxLength={10}
+                    pattern="\d{2}/\d{2}/\d{4}"
+                    className={inputCls} />
+                </Field>
+              )}
             </div>
 
             {/* Address */}
-            <Field label="Address" required>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <input type="text" required value={form.locality} onChange={set('locality')}
-                  placeholder="Locality / Area" className={inputCls} />
-                <input type="text" required value={form.city} onChange={set('city')}
-                  placeholder="City" className={inputCls} />
-                <input type="text" required value={form.state} onChange={set('state')}
-                  placeholder="State" className={inputCls} />
-              </div>
-              <p className="text-xs text-text-xmuted mt-1">Locality, City, State — India</p>
-            </Field>
+            {hasField('address') && (
+              <Field label="Address" required>
+                <textarea required value={form.address} onChange={set('address')}
+                  placeholder="Full Residential Address" rows="3" className="input resize-none" />
+              </Field>
+            )}
 
-            <Field label="Marital Status" required>
-              <div className="relative">
-                <select required value={form.maritalStatus} onChange={set('maritalStatus')}
-                  className={selectCls}>
-                  <option value="">Select status…</option>
-                  <option value="Single/Unmarried">Single / Unmarried</option>
-                  <option value="Married">Married</option>
-                </select>
-                <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-xmuted pointer-events-none" />
-              </div>
-            </Field>
+            {hasField('maritalStatus') && (
+              <Field label="Marital Status" required>
+                <div className="relative">
+                  <select required value={form.maritalStatus} onChange={set('maritalStatus')}
+                    className={selectCls}>
+                    <option value="">Select status…</option>
+                    <option value="Single/Unmarried">Single / Unmarried</option>
+                    <option value="Married">Married</option>
+                  </select>
+                  <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-xmuted pointer-events-none" />
+                </div>
+              </Field>
+            )}
           </div>
 
           {/* ── 2. Family Information ── */}
-          <div className="bg-white rounded-xl border border-border p-6 space-y-5">
-            <Section title="Family Information" />
+          {hasField('familyInfo') && (
+            <div className="bg-white rounded-xl border border-border p-6 space-y-5">
+              <Section title="Family Information" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Father's Name" required>
-                <input type="text" required value={form.fatherName} onChange={set('fatherName')}
-                  placeholder="Full name" className={inputCls} />
-              </Field>
-              <Field label="Father's Phone Number" required>
-                <input type="tel" required value={form.fatherPhone} onChange={set('fatherPhone')}
-                  placeholder="+91 98765 43210" className={inputCls} />
-              </Field>
-              <Field label="Mother's Name" required>
-                <input type="text" required value={form.motherName} onChange={set('motherName')}
-                  placeholder="Full name" className={inputCls} />
-              </Field>
-              <Field label="Mother's Phone Number" required>
-                <input type="tel" required value={form.motherPhone} onChange={set('motherPhone')}
-                  placeholder="+91 98765 43210" className={inputCls} />
-              </Field>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Father's Name" required>
+                  <input type="text" required value={form.fatherName} onChange={set('fatherName')}
+                    placeholder="Full name" className={inputCls} />
+                </Field>
+                <Field label="Father's Phone Number" required>
+                  <input type="tel" required value={form.fatherPhone} onChange={set('fatherPhone')}
+                    placeholder="+91 98765 43210" className={inputCls} />
+                </Field>
+                <Field label="Mother's Name" required>
+                  <input type="text" required value={form.motherName} onChange={set('motherName')}
+                    placeholder="Full name" className={inputCls} />
+                </Field>
+                <Field label="Mother's Phone Number" required>
+                  <input type="tel" required value={form.motherPhone} onChange={set('motherPhone')}
+                    placeholder="+91 98765 43210" className={inputCls} />
+                </Field>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* ── 3. Educational Background ── */}
-          <div className="bg-white rounded-xl border border-border p-6 space-y-5">
+          {hasField('educationHistory') && (
+            <div className="bg-white rounded-xl border border-border p-6 space-y-5">
             <Section
               title="Educational Background"
               subtitle="All fields are required. Enter 'N/A' if a level was not attended."
@@ -325,31 +328,38 @@ const Apply = ({ user }) => {
               </Field>
             </div>
           </div>
+          )}
 
           {/* ── 4. Work Experience ── */}
-          <div className="bg-white rounded-xl border border-border p-6 space-y-5">
+          {(hasField('experience') || hasField('reference')) && (
+            <div className="bg-white rounded-xl border border-border p-6 space-y-5">
             <Section
               title="Work Experience"
               subtitle="Describe your relevant experience and provide a professional reference."
             />
 
-            <Field label="Work Experience" required>
-              <textarea required value={form.experience} onChange={set('experience')} rows={4}
-                placeholder="Describe your previous roles, responsibilities, and duration. If you are a fresher, write 'No prior experience'."
-                className={`${inputCls} resize-none`} />
-            </Field>
+            {hasField('experience') && (
+              <Field label="Work Experience" required>
+                <textarea required value={form.experience} onChange={set('experience')} rows={4}
+                  placeholder="Describe your previous roles, responsibilities, and duration. If you are a fresher, write 'No prior experience'."
+                  className={`${inputCls} resize-none`} />
+              </Field>
+            )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Reference Name" hint="A professional contact who can vouch for your work">
-                <input type="text" value={form.referenceeName} onChange={set('referenceeName')}
-                  placeholder="Full name" className={inputCls} />
-              </Field>
-              <Field label="Reference Phone Number">
-                <input type="tel" value={form.referencePhone} onChange={set('referencePhone')}
-                  placeholder="+91 98765 43210" className={inputCls} />
-              </Field>
-            </div>
+            {hasField('reference') && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Reference Name" hint="A professional contact who can vouch for your work">
+                  <input type="text" value={form.referenceeName} onChange={set('referenceeName')}
+                    placeholder="Full name" className={inputCls} />
+                </Field>
+                <Field label="Reference Phone Number">
+                  <input type="tel" value={form.referencePhone} onChange={set('referencePhone')}
+                    placeholder="+91 98765 43210" className={inputCls} />
+                </Field>
+              </div>
+            )}
           </div>
+          )}
 
           {/* ── 5. Declaration ── */}
           <div className="bg-white rounded-xl border border-border p-6">

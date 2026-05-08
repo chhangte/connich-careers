@@ -57,4 +57,19 @@ router.patch('/:id/status', async (req, res) => {
     }
 });
 
+// Add message to application
+router.post('/:id/message', async (req, res) => {
+    try {
+        const { message, sentBy } = req.body;
+        const application = await Application.findByIdAndUpdate(
+            req.params.id,
+            { $push: { messages: { message, sentBy: sentBy || 'RECRUITER' } } },
+            { new: true }
+        );
+        res.json(application);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 module.exports = router;

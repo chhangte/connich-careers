@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MapPin, Briefcase, Clock, CheckCircle2, Building2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, MapPin, Briefcase, Clock, CheckCircle2, Building2, ExternalLink, Calendar, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5000/api';
@@ -31,7 +31,7 @@ const JobDetails = () => {
     if (user) {
       navigate(`/apply/${id}`);
     } else {
-      navigate(`/login?redirect=/apply/${id}`);
+      navigate(`/signup?redirect=/apply/${id}`);
     }
   };
 
@@ -70,6 +70,11 @@ const JobDetails = () => {
     ? Math.floor((Date.now() - new Date(job.createdAt)) / 86400000) + ' days ago'
     : 'Recently';
 
+  const company = job.postedBy?.company || {};
+  const companyName = company.name || 'Connich';
+  const logoUrl = company.logoUrl;
+  const initials = companyName.slice(0, 2).toUpperCase();
+
   return (
     <div className="min-h-screen bg-white pt-14">
       {/* Breadcrumb bar */}
@@ -91,16 +96,19 @@ const JobDetails = () => {
             {/* Header */}
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shrink-0"
-                  style={{ background: style.bg, color: style.text }}
-                >
-                  {(job.department || 'CO').slice(0, 2).toUpperCase()}
+                <div className="w-12 h-12 rounded-xl border border-border bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden">
+                  {logoUrl ? (
+                    <img src={logoUrl} alt={companyName} className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <span className="font-bold text-sm" style={{ color: style.text }}>
+                      {initials}
+                    </span>
+                  )}
                 </div>
                 <div>
-                  <p className="text-sm text-text-muted flex items-center gap-1.5">
-                    <Building2 size={13} /> Connich
-                  </p>
+                  <Link to={`/company/${job.postedBy?._id}`} className="text-sm text-text-muted flex items-center gap-1.5 hover:text-accent no-underline w-fit">
+                    <Building2 size={13} /> {companyName}
+                  </Link>
                   <span className="badge text-xs" style={{ background: style.bg, color: style.text }}>
                     {job.department || 'General'}
                   </span>
@@ -117,7 +125,7 @@ const JobDetails = () => {
                 )}
                 {job.salary && (
                   <span className="badge-blue flex items-center gap-1.5">
-                    <Briefcase size={12} /> ${job.salary}
+                    <Briefcase size={12} /> ₹{job.salary}
                   </span>
                 )}
                 <span className="badge-gray flex items-center gap-1.5">
@@ -154,20 +162,31 @@ const JobDetails = () => {
             {/* About company */}
             <section className="p-5 rounded-xl bg-surface-2 border border-border">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center">
-                  <Briefcase size={15} className="text-white" />
+                <div className="w-10 h-10 rounded-lg border border-border bg-white flex items-center justify-center shrink-0 overflow-hidden">
+                  {logoUrl ? (
+                    <img src={logoUrl} alt={companyName} className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <Briefcase size={16} className="text-text-muted" />
+                  )}
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-text">Connich</p>
-                  <p className="text-xs text-text-muted">Education Technology</p>
+                  <p className="font-semibold text-sm text-text">{companyName}</p>
+                  {company.industry && <p className="text-xs text-text-muted">{company.industry}</p>}
                 </div>
               </div>
               <p className="text-xs text-text-muted leading-relaxed">
-                Connich is a fast-growing edtech company empowering teachers, students and administrators with best-in-class tools. Join a mission-driven team that puts impact first.
+                {company.about || `${companyName} is hiring for the ${job.title} position.`}
               </p>
-              <a href="#" className="text-xs text-accent hover:text-accent-hover flex items-center gap-1 mt-3 no-underline font-medium">
-                Learn more about Connich <ExternalLink size={11} />
-              </a>
+              <div className="flex items-center gap-4 mt-3">
+                {company.website && (
+                  <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:text-accent-hover flex items-center gap-1 no-underline font-medium">
+                    Visit Website <ExternalLink size={11} />
+                  </a>
+                )}
+                <Link to={`/company/${job.postedBy?._id}`} className="text-xs text-accent hover:text-accent-hover flex items-center gap-1 no-underline font-medium">
+                  View full profile <ArrowLeft size={11} className="rotate-180" />
+                </Link>
+              </div>
             </section>
           </div>
 
@@ -179,11 +198,55 @@ const JobDetails = () => {
                 Submit your application in under 2 minutes. We review every submission.
               </p>
 
+              {/* Key Dates Panel */}
+              <div className="bg-surface-2 rounded-lg p-4 mb-5 border border-border">
+                <p className="text-xs font-semibold text-text-xmuted uppercase tracking-wider mb-3">Recruitment Timeline</p>
+                <div className="space-y-3">
+                  {job.hiringMode === 'DEADLINE' && job.lastDateToApply ? (
+                    <div className="flex items-start gap-3">
+                      <AlertCircle size={15} className={new Date(job.lastDateToApply) < new Date() ? 'text-danger' : 'text-warning'} />
+                      <div>
+                        <p className="text-xs font-medium text-text">Last Date to Apply</p>
+                        <p className="text-xs text-text-muted">{new Date(job.lastDateToApply).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 size={15} className="text-success" />
+                      <div>
+                        <p className="text-xs font-medium text-text">Actively Hiring</p>
+                        <p className="text-xs text-text-muted">Reviewing applications as they arrive</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {job.interviewDate && (
+                    <div className="flex items-start gap-3">
+                      <Calendar size={15} className="text-text-muted" />
+                      <div>
+                        <p className="text-xs font-medium text-text">Interview Date</p>
+                        <p className="text-xs text-text-muted">{new Date(job.interviewDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {job.interviewVenue && (
+                    <div className="flex items-start gap-3">
+                      <MapPin size={15} className="text-text-muted" />
+                      <div>
+                        <p className="text-xs font-medium text-text">Interview Venue</p>
+                        <p className="text-xs text-text-muted">{job.interviewVenue}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-3 mb-5">
                 {job.salary && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-text-muted">Compensation</span>
-                    <span className="font-semibold text-text">${job.salary}</span>
+                    <span className="font-semibold text-text">₹{job.salary}</span>
                   </div>
                 )}
                 {job.location && (

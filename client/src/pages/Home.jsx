@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Clock, ChevronRight, Briefcase, Building2, TrendingUp, Users } from 'lucide-react';
+import { Search, MapPin, Clock, ChevronRight, Briefcase, Building2, TrendingUp, Users, CheckCircle2, Calendar, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5000/api';
@@ -8,19 +8,59 @@ const API_BASE_URL = 'http://localhost:5000/api';
 const DEPARTMENTS = ['All', 'Engineering', 'Education', 'Design', 'Marketing', 'Administration', 'Finance'];
 
 const DEPT_COLORS = {
-  Engineering:     { bg: '#eff6ff', text: '#1d4ed8' },
-  Education:       { bg: '#f0fdf4', text: '#15803d' },
-  Design:          { bg: '#fdf4ff', text: '#7e22ce' },
-  Marketing:       { bg: '#fff7ed', text: '#c2410c' },
-  Administration:  { bg: '#f0f9ff', text: '#0369a1' },
-  Finance:         { bg: '#fefce8', text: '#a16207' },
-  Default:         { bg: '#f8fafc', text: '#475569' },
+  Engineering:    { bg: '#eff6ff', text: '#1d4ed8' },
+  Education:      { bg: '#f0fdf4', text: '#15803d' },
+  Design:         { bg: '#fdf4ff', text: '#7e22ce' },
+  Marketing:      { bg: '#fff7ed', text: '#c2410c' },
+  Administration: { bg: '#f0f9ff', text: '#0369a1' },
+  Finance:        { bg: '#fefce8', text: '#a16207' },
+  Default:        { bg: '#f8fafc', text: '#475569' },
 };
 
 const getDeptStyle = (dept) => DEPT_COLORS[dept] || DEPT_COLORS.Default;
 
+/* ── Deadline badge ───────────────────────── */
+const DeadlineBadge = ({ job }) => {
+  if (job.hiringMode === 'ROLLING' || !job.hiringMode) {
+    return (
+      <span className="badge-green flex items-center gap-1">
+        <CheckCircle2 size={11} /> Actively hiring
+      </span>
+    );
+  }
+  if (job.hiringMode === 'DEADLINE' && job.lastDateToApply) {
+    const deadline = new Date(job.lastDateToApply);
+    const daysLeft = Math.ceil((deadline - Date.now()) / 86400000);
+    if (daysLeft < 0) {
+      return <span className="badge-red flex items-center gap-1"><AlertCircle size={11} /> Closed</span>;
+    }
+    if (daysLeft === 0) {
+      return <span className="badge-red flex items-center gap-1"><AlertCircle size={11} /> Closes today</span>;
+    }
+    if (daysLeft <= 7) {
+      return (
+        <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-600">
+          <Calendar size={11} /> {daysLeft}d left
+        </span>
+      );
+    }
+    return (
+      <span className="badge-yellow flex items-center gap-1">
+        <Calendar size={11} />
+        Apply by {deadline.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+      </span>
+    );
+  }
+  return null;
+};
+
+/* ── Job Card ─────────────────────────────── */
 const JobCard = ({ job }) => {
   const style = getDeptStyle(job.department);
+  const company = job.postedBy?.company;
+  const companyName = company?.name || 'Connich';
+  const logoUrl = company?.logoUrl;
+  const initials = companyName.slice(0, 2).toUpperCase();
   const timeAgo = job.createdAt
     ? Math.floor((Date.now() - new Date(job.createdAt)) / 86400000) + 'd ago'
     : 'Recently';
@@ -30,18 +70,20 @@ const JobCard = ({ job }) => {
       <div className="card-hover p-5 flex flex-col gap-4 group">
         {/* Top row */}
         <div className="flex items-start justify-between gap-3">
-          <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold"
-            style={{ background: style.bg, color: style.text }}
-          >
-            {(job.department || 'CO').slice(0, 2).toUpperCase()}
+          {/* Company logo / initials */}
+          <div className="w-10 h-10 rounded-lg border border-border bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden">
+            {logoUrl ? (
+              <img src={logoUrl} alt={companyName} className="w-full h-full object-contain p-1" />
+            ) : (
+              <span
+                className="text-sm font-bold"
+                style={{ color: style.text }}
+              >
+                {initials}
+              </span>
+            )}
           </div>
-          <span
-            className="badge text-xs"
-            style={{ background: style.bg, color: style.text }}
-          >
-            {job.department || 'General'}
-          </span>
+          <DeadlineBadge job={job} />
         </div>
 
         {/* Title & company */}
@@ -49,9 +91,13 @@ const JobCard = ({ job }) => {
           <h3 className="font-semibold text-text text-base leading-snug group-hover:text-accent transition-colors mb-1">
             {job.title}
           </h3>
-          <p className="text-sm text-text-muted flex items-center gap-1.5">
-            <Building2 size={13} /> Connich
-          </p>
+          <Link
+            to={`/company/${job.postedBy?._id}`}
+            className="text-sm text-text-muted flex items-center gap-1.5 hover:text-accent no-underline w-fit"
+            onClick={e => e.stopPropagation()}
+          >
+            <Building2 size={13} /> {companyName}
+          </Link>
         </div>
 
         {/* Meta */}
@@ -63,7 +109,12 @@ const JobCard = ({ job }) => {
           )}
           {job.salary && (
             <span className="flex items-center gap-1 font-medium text-text-2">
-              ${job.salary}
+              ₹{job.salary}
+            </span>
+          )}
+          {job.department && (
+            <span className="badge text-xs" style={{ background: style.bg, color: style.text }}>
+              {job.department}
             </span>
           )}
           <span className="flex items-center gap-1 ml-auto">
@@ -126,13 +177,18 @@ const Home = () => {
 
   const filtered = jobs.filter((j) => {
     const matchesDept = activeDept === 'All' || j.department === activeDept;
+    const companyName = j.postedBy?.company?.name || '';
     const matchesSearch =
       !search ||
       j.title?.toLowerCase().includes(search.toLowerCase()) ||
       j.location?.toLowerCase().includes(search.toLowerCase()) ||
-      j.department?.toLowerCase().includes(search.toLowerCase());
+      j.department?.toLowerCase().includes(search.toLowerCase()) ||
+      companyName.toLowerCase().includes(search.toLowerCase());
     return matchesDept && matchesSearch;
   });
+
+  // Unique companies count
+  const companiesCount = new Set(jobs.map(j => j.postedBy?._id).filter(Boolean)).size;
 
   return (
     <div className="min-h-screen bg-white">
@@ -144,11 +200,11 @@ const Home = () => {
             Now hiring across 12 departments
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-text tracking-tight leading-tight mb-4">
-            Build your career{' '}
-            <span className="text-accent">at Connich</span>
+            Find your next role{' '}
+            <span className="text-accent">on Connich Careers</span>
           </h1>
           <p className="text-lg text-text-muted max-w-xl mx-auto mb-10 leading-relaxed">
-            We're a team of educators, engineers, and builders. Find a role where your work truly matters.
+            Browse open positions from companies that care. Apply in minutes, hear back faster.
           </p>
 
           {/* Search */}
@@ -158,7 +214,7 @@ const Home = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, location, or department…"
+              placeholder="Search by title, company, location, or department…"
               className="input-lg pl-11 w-full shadow-sm"
             />
           </div>
@@ -169,7 +225,7 @@ const Home = () => {
         {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 animate-fade-up-2">
           <StatCard icon={Briefcase}   value={loading ? '—' : `${jobs.length}+`} label="Open positions" />
-          <StatCard icon={Building2}   value="1"      label="Company" />
+          <StatCard icon={Building2}   value={loading ? '—' : `${companiesCount || 1}`} label={companiesCount === 1 ? 'Company' : 'Companies'} />
           <StatCard icon={Users}       value="1,200+" label="Candidates" />
           <StatCard icon={TrendingUp}  value="98%"    label="Satisfaction" />
         </div>

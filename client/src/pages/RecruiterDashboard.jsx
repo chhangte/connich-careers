@@ -12,14 +12,31 @@ const STATUS_MAP = {
   SHORTLISTED: { label: 'Shortlisted',  cls: 'badge-green'  },
   PENDING:     { label: 'Under review', cls: 'badge-yellow' },
   REJECTED:    { label: 'Not selected', cls: 'badge-red'    },
+  JOINED:      { label: 'Joined',       cls: 'badge-blue'   },
 };
 
 const DEPARTMENTS = ['Education', 'Engineering', 'Administration', 'Design', 'Marketing', 'Finance', 'HR', 'Other'];
+
+const KNOWN_APPLICATION_FIELDS = [
+  { id: 'phone', label: 'Phone Number' },
+  { id: 'dob', label: 'Date of Birth' },
+  { id: 'address', label: 'Address' },
+  { id: 'maritalStatus', label: 'Marital Status' },
+  { id: 'familyInfo', label: 'Family Information' },
+  { id: 'educationHistory', label: 'Education Background' },
+  { id: 'experience', label: 'Work Experience' },
+  { id: 'reference', label: 'Professional Reference' },
+];
 
 /* ── New Job Modal ──────────────────────────── */
 const NewJobModal = ({ onClose, onCreated, recruiterId }) => {
   const [form, setForm] = useState({
     title: '', department: '', location: '', salary: '', description: '', requirements: '',
+    hiringMode: 'ROLLING',
+    lastDateToApply: '',
+    interviewDate: '',
+    interviewVenue: '',
+    applicationFields: KNOWN_APPLICATION_FIELDS.map(f => f.id),
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -123,10 +140,72 @@ const NewJobModal = ({ onClose, onCreated, recruiterId }) => {
             <label className="label" htmlFor="job-reqs">
               Requirements <span className="text-text-xmuted font-normal">(one per line)</span>
             </label>
-            <textarea id="job-reqs" name="requirements" rows={4} value={form.requirements}
+            <textarea id="job-reqs" name="requirements" rows={3} value={form.requirements}
               onChange={handleChange}
-              placeholder={"Bachelor's degree in relevant field\n3+ years of experience\nStrong communication skills"}
+              placeholder={"Bachelor's degree in relevant field\n3+ years of experience"}
               className="input resize-none font-mono text-xs" />
+          </div>
+
+          <div className="border-t border-border my-4 pt-4">
+            <h3 className="font-semibold text-text mb-3">Recruitment Timeline</h3>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="label" htmlFor="job-mode">Hiring Mode</label>
+                <select id="job-mode" name="hiringMode" value={form.hiringMode}
+                  onChange={handleChange} className="input">
+                  <option value="ROLLING">Actively Hiring (Rolling)</option>
+                  <option value="DEADLINE">Fixed Deadline</option>
+                </select>
+              </div>
+              {form.hiringMode === 'DEADLINE' && (
+                <div>
+                  <label className="label" htmlFor="job-deadline">Last Date to Apply</label>
+                  <input id="job-deadline" type="date" name="lastDateToApply" value={form.lastDateToApply}
+                    onChange={handleChange} className="input" required />
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="label" htmlFor="job-int-date">Interview Date</label>
+                <input id="job-int-date" type="date" name="interviewDate" value={form.interviewDate}
+                  onChange={handleChange} className="input" />
+              </div>
+              <div>
+                <label className="label" htmlFor="job-int-venue">Interview Venue</label>
+                <input id="job-int-venue" name="interviewVenue" value={form.interviewVenue}
+                  onChange={handleChange} placeholder="e.g. Virtual, HQ Office" className="input" />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-border my-4 pt-4">
+            <h3 className="font-semibold text-text mb-1">Application Form Fields</h3>
+            <p className="text-xs text-text-muted mb-3">Select the information applicants must provide. Name and Email are always required.</p>
+            <div className="grid grid-cols-2 gap-y-2 gap-x-4 bg-surface-2 p-3 rounded-lg border border-border">
+              {KNOWN_APPLICATION_FIELDS.map(f => (
+                <label key={f.id} className="flex items-center gap-2 cursor-pointer group">
+                  <div className="relative flex items-center shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={form.applicationFields.includes(f.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) setForm({ ...form, applicationFields: [...form.applicationFields, f.id] });
+                        else setForm({ ...form, applicationFields: form.applicationFields.filter(id => id !== f.id) });
+                      }}
+                      className="sr-only"
+                    />
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                      form.applicationFields.includes(f.id) ? 'bg-accent border-accent' : 'bg-white border-border group-hover:border-accent'
+                    }`}>
+                      {form.applicationFields.includes(f.id) && <CheckCircle2 size={10} className="text-white" strokeWidth={3} />}
+                    </div>
+                  </div>
+                  <span className="text-xs text-text-2 group-hover:text-text transition-colors">{f.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </form>
 
@@ -157,7 +236,7 @@ const StatusDropdown = ({ appId, current, onChange }) => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const options = ['PENDING', 'SHORTLISTED', 'REJECTED'];
+  const options = ['PENDING', 'SHORTLISTED', 'REJECTED', 'JOINED'];
   const current_s = STATUS_MAP[current] || STATUS_MAP.PENDING;
 
   return (
@@ -317,6 +396,9 @@ const generateBioData = (app, jobTitle) => {
 
 /* ── View Applicant Modal ───────────────────── */
 const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
+  const [msg, setMsg] = useState('');
+  const [sendingMsg, setSendingMsg] = useState(false);
+
   if (!app) return null;
   const d = app.details || {};
   const name = d.name || app.applicant?.name || '—';
@@ -403,6 +485,35 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
           <SectionHead title="Application Details" />
           <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
           <Row label="Application ID" value={app._id} />
+
+          <SectionHead title="Message Applicant" />
+          <div className="pt-2">
+            <textarea
+              rows={3}
+              className="input resize-none mb-2"
+              placeholder="Type a message (e.g. Next steps, Interview details)..."
+              value={msg}
+              onChange={(e) => setMsg(e.target.value)}
+            />
+            <button
+              disabled={sendingMsg || !msg.trim()}
+              onClick={async () => {
+                setSendingMsg(true);
+                try {
+                  await axios.post(`${API}/applications/${app._id}/message`, { message: msg, sentBy: 'RECRUITER' });
+                  setMsg('');
+                  alert('Message sent successfully.');
+                } catch (err) {
+                  alert('Failed to send message.');
+                } finally {
+                  setSendingMsg(false);
+                }
+              }}
+              className="btn-outline text-xs py-1.5 px-3"
+            >
+              {sendingMsg ? 'Sending...' : 'Send Message'}
+            </button>
+          </div>
         </div>
 
         {/* Footer */}
@@ -420,8 +531,109 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
   );
 };
 
+/* ── Company Profile Tab ──────────────────────── */
+const CompanyProfileTab = ({ user, setUser }) => {
+  const [form, setForm] = useState({
+    name: user?.company?.name || '',
+    industry: user?.company?.industry || '',
+    location: user?.company?.location || '',
+    tagline: user?.company?.tagline || '',
+    website: user?.company?.website || '',
+    logoUrl: user?.company?.logoUrl || '',
+    about: user?.company?.about || '',
+  });
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setMessage('');
+    try {
+      const res = await axios.patch(`${API}/auth/company/${user.id || user._id}`, { company: form });
+      const updatedUser = res.data.user;
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setMessage('Company profile updated successfully.');
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to update profile.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl animate-fade-up">
+      <div className="card p-6">
+        <h2 className="text-lg font-semibold text-text mb-1">Company Profile</h2>
+        <p className="text-sm text-text-muted mb-6">This information is visible to candidates on your public profile and job listings.</p>
+
+        {message && (
+          <div className={`mb-5 p-3 rounded-lg text-sm flex items-center gap-2 ${message.includes('success') ? 'bg-success-light text-success' : 'bg-danger-light text-danger'}`}>
+            {message.includes('success') ? <CheckCircle2 size={15} /> : <AlertCircle size={15} />}
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label" htmlFor="cp-name">Company Name <span className="text-danger">*</span></label>
+              <input id="cp-name" name="name" required value={form.name} onChange={handleChange} className="input" />
+            </div>
+            <div>
+              <label className="label" htmlFor="cp-ind">Industry</label>
+              <input id="cp-ind" name="industry" value={form.industry} onChange={handleChange} className="input" />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label" htmlFor="cp-loc">HQ Location</label>
+              <input id="cp-loc" name="location" value={form.location} onChange={handleChange} className="input" />
+            </div>
+            <div>
+              <label className="label" htmlFor="cp-web">Website</label>
+              <input id="cp-web" type="url" name="website" value={form.website} onChange={handleChange} className="input" />
+            </div>
+          </div>
+
+          <div>
+            <label className="label" htmlFor="cp-tag">Tagline</label>
+            <input id="cp-tag" name="tagline" value={form.tagline} onChange={handleChange} className="input" placeholder="A short, catchy description" />
+          </div>
+
+          <div>
+            <label className="label" htmlFor="cp-logo">Logo URL</label>
+            <input id="cp-logo" type="url" name="logoUrl" value={form.logoUrl} onChange={handleChange} className="input" placeholder="https://..." />
+            {form.logoUrl && (
+              <div className="mt-2 w-16 h-16 border border-border rounded flex items-center justify-center bg-surface-2 p-1">
+                <img src={form.logoUrl} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="label" htmlFor="cp-about">About</label>
+            <textarea id="cp-about" name="about" rows={5} value={form.about} onChange={handleChange} className="input resize-none" placeholder="Tell candidates what makes your company great..." />
+          </div>
+
+          <div className="pt-4 border-t border-border flex justify-end">
+            <button type="submit" disabled={saving} className="btn-primary">
+              {saving ? <><Loader2 size={15} className="animate-spin" /> Saving...</> : <><CheckCircle2 size={15} /> Save Changes</>}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 /* ── Main Dashboard ─────────────────────────── */
-const RecruiterDashboard = ({ user }) => {
+const RecruiterDashboard = ({ user, setUser }) => {
+  const [activeTab, setActiveTab] = useState('jobs');
   const [jobs, setJobs] = useState([]);
   const [jobsLoading, setJobsLoading] = useState(true);
   const [activeJob, setActiveJob] = useState(null);
@@ -447,7 +659,7 @@ const RecruiterDashboard = ({ user }) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get(`${API}/jobs`);
+        const res = await axios.get(`${API}/jobs/recruiter/${user.id || user._id}`);
         setJobs(res.data);
         if (res.data.length > 0) setActiveJob(res.data[0]);
       } catch (err) {
@@ -579,7 +791,23 @@ const RecruiterDashboard = ({ user }) => {
       )}
 
       <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        <div className="flex border-b border-border mb-6">
+          <button
+            onClick={() => setActiveTab('jobs')}
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === 'jobs' ? 'border-accent text-accent' : 'border-transparent text-text-muted hover:text-text'}`}
+          >
+            Job Listings
+          </button>
+          <button
+            onClick={() => setActiveTab('company')}
+            className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${activeTab === 'company' ? 'border-accent text-accent' : 'border-transparent text-text-muted hover:text-text'}`}
+          >
+            Company Profile
+          </button>
+        </div>
+
+        {activeTab === 'jobs' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
 
           {/* ── Job List Sidebar ── */}
           <aside className="lg:col-span-1 animate-fade-up">
@@ -701,7 +929,7 @@ const RecruiterDashboard = ({ user }) => {
                       </button>
                       {statusFilterOpen && (
                         <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-border rounded-lg shadow-lg py-1 w-36 animate-fade-in">
-                          {['ALL', 'PENDING', 'SHORTLISTED', 'REJECTED'].map(opt => (
+                          {['ALL', 'PENDING', 'SHORTLISTED', 'REJECTED', 'JOINED'].map(opt => (
                             <button
                               key={opt}
                               onClick={() => { setStatusFilter(opt); setStatusFilterOpen(false); }}
@@ -855,6 +1083,9 @@ const RecruiterDashboard = ({ user }) => {
           </main>
 
         </div>
+        ) : (
+          <CompanyProfileTab user={user} setUser={setUser} />
+        )}
       </div>
     </div>
   );

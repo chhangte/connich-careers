@@ -18,7 +18,7 @@ const Navbar = ({ user, logout }) => {
   };
 
   // Don't show navbar on auth pages
-  const authRoutes = ['/login', '/signup'];
+  const authRoutes = ['/login', '/signup', '/recruiter/login', '/recruiter/signup'];
   if (authRoutes.includes(location.pathname)) return null;
 
   const isActive = (path) =>

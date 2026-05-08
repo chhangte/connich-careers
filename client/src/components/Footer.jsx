@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Briefcase, ExternalLink } from 'lucide-react';
+import { Briefcase, Building2, ArrowRight } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -20,7 +20,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Links */}
+          {/* Company links */}
           <div>
             <p className="section-label mb-3">Company</p>
             <ul className="space-y-2">
@@ -29,14 +29,18 @@ const Footer = () => {
               ))}
             </ul>
           </div>
+
+          {/* Candidates links */}
           <div>
             <p className="section-label mb-3">Candidates</p>
             <ul className="space-y-2">
-              {['Browse Jobs', 'Your Applications', 'Career Resources'].map(l => (
-                <li key={l}><a href="#" className="text-sm text-text-muted hover:text-text no-underline">{l}</a></li>
-              ))}
+              <li><Link to="/" className="text-sm text-text-muted hover:text-text no-underline">Browse Jobs</Link></li>
+              <li><Link to="/dashboard" className="text-sm text-text-muted hover:text-text no-underline">Your Applications</Link></li>
+              <li><a href="#" className="text-sm text-text-muted hover:text-text no-underline">Career Resources</a></li>
             </ul>
           </div>
+
+          {/* Legal */}
           <div>
             <p className="section-label mb-3">Legal</p>
             <ul className="space-y-2">
@@ -44,6 +48,34 @@ const Footer = () => {
                 <li key={l}><a href="#" className="text-sm text-text-muted hover:text-text no-underline">{l}</a></li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        {/* Recruiter CTA banner */}
+        <div className="rounded-xl border border-border bg-white p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: 'linear-gradient(135deg, #1e3a5f, #2563eb)' }}>
+              <Building2 size={18} className="text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text">Are you an employer?</p>
+              <p className="text-xs text-text-muted">Post jobs, manage applications, and find great talent.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              to="/recruiter/login"
+              className="text-sm font-medium text-text-muted hover:text-text no-underline transition-colors"
+            >
+              Recruiter sign in
+            </Link>
+            <Link
+              to="/recruiter/signup"
+              className="btn-primary text-sm py-2 px-4 no-underline flex items-center gap-1.5"
+            >
+              Post a job <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
 

@@ -40,9 +40,14 @@ const ApplicationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['PENDING', 'SHORTLISTED', 'REJECTED'],
+        enum: ['PENDING', 'SHORTLISTED', 'REJECTED', 'JOINED'],
         default: 'PENDING'
     },
+    messages: [{
+        message: { type: String, required: true },
+        sentAt: { type: Date, default: Date.now },
+        sentBy: { type: String, enum: ['RECRUITER', 'SYSTEM'], default: 'RECRUITER' }
+    }],
     appliedAt: { type: Date, default: Date.now }
 });
 
