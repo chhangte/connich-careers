@@ -113,6 +113,19 @@ const Dashboard = ({ user, setUser }) => {
     return acc;
   }, []).sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt));
 
+  const [lastRead, setLastRead] = useState(parseInt(localStorage.getItem('lastReadNotifications') || '0', 10));
+  const newNotificationsCount = allMessages.filter(m => new Date(m.sentAt).getTime() > lastRead).length;
+  const hasNewNotifications = newNotificationsCount > 0;
+
+  const handleTabClick = (label) => {
+    setActiveTab(label);
+    if (label === 'Notifications' && hasNewNotifications) {
+      const now = Date.now();
+      localStorage.setItem('lastReadNotifications', now.toString());
+      setLastRead(now);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-surface-2 pt-14">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -142,13 +155,21 @@ const Dashboard = ({ user, setUser }) => {
                 return (
                   <button
                     key={label}
-                    onClick={() => setActiveTab(label)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left transition-colors ${
+                    onClick={() => handleTabClick(label)}
+                    className={`relative w-full flex items-center justify-between px-4 py-3 text-sm text-left transition-colors ${
                       active ? 'bg-accent-light text-accent font-medium' : 'text-text-muted hover:bg-surface-2 hover:text-text'
                     }`}
                   >
-                    <Icon size={15} />
-                    {label}
+                    <div className="flex items-center gap-3">
+                      <Icon size={15} />
+                      {label}
+                    </div>
+                    {label === 'Notifications' && hasNewNotifications && (
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[11px] font-bold text-success">{newNotificationsCount}</span>
+                        <span className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
+                      </div>
+                    )}
                   </button>
                 );
               })}

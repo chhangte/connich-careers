@@ -946,7 +946,7 @@ const RecruiterDashboard = ({ user, setUser }) => {
                 </div>
 
                 {/* Table card */}
-                <div className="card overflow-hidden">
+                <div className="card border-b-0 pb-0 mb-4">
                   {appLoading ? (
                     <div className="flex items-center justify-center py-16">
                       <Loader2 size={22} className="animate-spin text-text-xmuted" />
@@ -954,7 +954,7 @@ const RecruiterDashboard = ({ user, setUser }) => {
                   ) : (
                     <>
                       {/* Desktop table */}
-                      <div className="hidden sm:block overflow-x-auto">
+                      <div className="hidden sm:block">
                         <table className="w-full text-left">
                           <thead>
                             <tr className="bg-surface-2 text-xs text-text-xmuted uppercase tracking-wider border-b border-border">
