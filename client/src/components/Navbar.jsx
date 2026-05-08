@@ -33,12 +33,10 @@ const Navbar = ({ user, logout }) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center h-14">
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 mr-8 shrink-0 text-text no-underline hover:text-text">
-          <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center">
-            <Briefcase size={14} className="text-white" strokeWidth={2.5} />
-          </div>
-          <span className="font-semibold text-sm tracking-tight">Connich Careers</span>
-        </Link>
+          <Link to="/" className="flex items-center gap-2 no-underline text-text hover:text-text">
+            <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain" />
+            <span className="font-semibold">Connich Careers</span>
+          </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1 flex-1">

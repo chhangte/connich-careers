@@ -57,9 +57,7 @@ const RecruiterLogin = ({ setUser }) => {
 
         <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2 no-underline">
-            <div className="w-8 h-8 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
-              <Briefcase size={16} className="text-white" strokeWidth={2.5} />
-            </div>
+            <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain brightness-0 invert" />
             <span className="font-semibold text-white">Connich Careers</span>
           </Link>
         </div>
@@ -88,9 +86,7 @@ const RecruiterLogin = ({ setUser }) => {
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white">
         {/* Mobile logo */}
         <div className="md:hidden mb-8 flex items-center gap-2">
-          <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-            <Building2 size={16} className="text-white" />
-          </div>
+          <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain" />
           <span className="font-semibold">Recruiter Portal</span>
         </div>
 

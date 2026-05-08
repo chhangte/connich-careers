@@ -49,9 +49,7 @@ const Login = ({ setUser }) => {
         />
         <div className="relative z-10">
           <Link to="/" className="flex items-center gap-2 no-underline text-text hover:text-text">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Briefcase size={16} className="text-white" strokeWidth={2.5} />
-            </div>
+            <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain" />
             <span className="font-semibold">Connich Careers</span>
           </Link>
         </div>
@@ -91,9 +89,7 @@ const Login = ({ setUser }) => {
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12">
         {/* Mobile-only logo */}
         <div className="md:hidden mb-8 flex items-center gap-2">
-          <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-            <Briefcase size={16} className="text-white" strokeWidth={2.5} />
-          </div>
+          <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain" />
           <span className="font-semibold">Connich Careers</span>
         </div>
 

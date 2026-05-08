@@ -13,9 +13,31 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/careers-kidsden')
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB Connection Error:', err));
+let cachedDb = null;
+
+async function connectToDatabase() {
+    if (cachedDb) return cachedDb;
+    
+    console.log('Connecting to MongoDB...');
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/careers-kidsden', {
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+    });
+    
+    cachedDb = conn;
+    console.log('MongoDB Connected');
+    return conn;
+}
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+    try {
+        await connectToDatabase();
+        next();
+    } catch (err) {
+        console.error('Database connection error:', err);
+        res.status(500).json({ message: 'Database connection failed' });
+    }
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
