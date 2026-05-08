@@ -10,9 +10,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-3 no-underline text-text hover:text-text">
-              <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center">
-                <Briefcase size={14} className="text-white" strokeWidth={2.5} />
-              </div>
+              <img src="/logo.png" alt="Connich Careers" className="w-8 h-8 object-contain" />
               <span className="font-semibold text-sm">Connich Careers</span>
             </Link>
             <p className="text-text-muted text-sm leading-relaxed">
