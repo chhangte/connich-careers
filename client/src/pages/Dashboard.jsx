@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Briefcase, Clock, ChevronRight, User, LogOut, FileText, Bell, Settings, MapPin, X } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const STATUS_MAP = {
   PENDING:     { label: 'Under review', cls: 'badge-yellow' },

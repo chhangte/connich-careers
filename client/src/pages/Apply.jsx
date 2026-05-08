@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { CheckCircle2, Building2, Briefcase, AlertTriangle, ChevronDown } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const QUALIFICATIONS = [
   'BA', 'BSc', 'BCom', 'BBA', 'LLB', 'BE / BTech',

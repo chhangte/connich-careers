@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-const API = 'http://localhost:5000/api';
+const API = '/api';
 
 const STATUS_MAP = {
   SHORTLISTED: { label: 'Shortlisted',  cls: 'badge-green'  },

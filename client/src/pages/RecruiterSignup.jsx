@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Building2, ArrowRight, CheckCircle2, Upload, Globe, MapPin, Briefcase, ChevronDown } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const INDUSTRIES = [
   'Education & EdTech',

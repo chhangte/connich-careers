@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Clock, ChevronRight, Briefcase, Building2, TrendingUp, Users, CheckCircle2, Calendar, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const DEPARTMENTS = ['All', 'Engineering', 'Education', 'Design', 'Marketing', 'Administration', 'Finance'];
 

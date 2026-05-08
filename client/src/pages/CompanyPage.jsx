@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Globe, MapPin, Briefcase, Clock, Building2, ExternalLink, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 const DEPT_COLORS = {
   Engineering:    { bg: '#eff6ff', text: '#1d4ed8' },
