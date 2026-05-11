@@ -14,6 +14,11 @@ import AdminDashboard from './pages/AdminDashboard';
 import RecruiterSignup from './pages/RecruiterSignup';
 import RecruiterLogin from './pages/RecruiterLogin';
 import CompanyPage from './pages/CompanyPage';
+import BrowseJobs from './pages/BrowseJobs';
+import About from './pages/About';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CookiePolicy from './pages/CookiePolicy';
 
 function App() {
   // Lazy initializer: reads localStorage synchronously on the very first render.
@@ -48,6 +53,11 @@ function App() {
             <Route path="/signup" element={<Signup setUser={setUser} />} />
             <Route path="/apply/:id" element={<Apply user={user} />} />
             <Route path="/company/:id" element={<CompanyPage />} />
+            <Route path="/browse" element={<BrowseJobs />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
 
             {/* Recruiter auth (separate flow, linked from footer) */}
             <Route path="/recruiter/signup" element={<RecruiterSignup setUser={setUser} />} />

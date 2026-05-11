@@ -402,7 +402,7 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
   if (!app) return null;
   const d = app.details || {};
   const name = d.name || app.applicant?.name || '—';
-  const qual = [d.highestQualification, d.discipline].filter(Boolean).join(' · ') || '—';
+  const qualSummary = [d.highestQualification, d.discipline].filter(Boolean).join(' · ') || '—';
   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
 
   const Row = ({ label, value }) => (
@@ -466,7 +466,8 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
           <Row label="Mother's Phone" value={d.motherPhone} />
 
           <SectionHead title="Educational Background" />
-          <Row label="Highest Qualification" value={qual} />
+          <Row label="Highest Qualification" value={d.highestQualification} />
+          <Row label="Field" value={d.discipline} />
           <Row label="Primary School" value={d.primarySchool} />
           <Row label="Middle School" value={d.middleSchool} />
           <Row label="High School" value={d.highSchool} />
@@ -729,10 +730,12 @@ const RecruiterDashboard = ({ user, setUser }) => {
   /* Filtered applicant list */
   const filtered = applicants.filter(a => {
     const name = a.applicant?.name || '';
-    const edu = a.details?.education || '';
+    const qual = a.details?.highestQualification || '';
+    const field = a.details?.discipline || '';
     const matchSearch = !search ||
       name.toLowerCase().includes(search.toLowerCase()) ||
-      edu.toLowerCase().includes(search.toLowerCase());
+      qual.toLowerCase().includes(search.toLowerCase()) ||
+      field.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'ALL' || a.status === statusFilter;
     return matchSearch && matchStatus;
   });

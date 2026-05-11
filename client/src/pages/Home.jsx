@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Clock, ChevronRight, Briefcase, Building2, TrendingUp, Users, CheckCircle2, Calendar, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
@@ -160,22 +160,29 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeDept, setActiveDept] = useState('All');
+  const [stats, setStats] = useState({ jobsCount: 0, companiesCount: 0, candidatesCount: 0 });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchJobs = async () => {
+    const fetchJobsAndStats = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/jobs`);
-        setJobs(res.data);
+        const [jobsRes, statsRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/jobs`),
+          axios.get(`${API_BASE_URL}/stats`)
+        ]);
+        setJobs(Array.isArray(jobsRes.data) ? jobsRes.data : []);
+        setStats(statsRes.data || { jobsCount: 0, companiesCount: 0, candidatesCount: 0 });
       } catch (err) {
-        console.error('Error fetching jobs:', err);
+        console.error('Error fetching data:', err);
+        setJobs([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchJobs();
+    fetchJobsAndStats();
   }, []);
 
-  const filtered = jobs.filter((j) => {
+  const filtered = (Array.isArray(jobs) ? jobs : []).filter((j) => {
     const matchesDept = activeDept === 'All' || j.department === activeDept;
     const companyName = j.postedBy?.company?.name || '';
     const matchesSearch =
@@ -187,8 +194,14 @@ const Home = () => {
     return matchesDept && matchesSearch;
   });
 
-  // Unique companies count
-  const companiesCount = new Set(jobs.map(j => j.postedBy?._id).filter(Boolean)).size;
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/browse?q=${encodeURIComponent(search.trim())}`);
+    } else {
+      navigate(`/browse`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -208,7 +221,7 @@ const Home = () => {
           </p>
 
           {/* Search */}
-          <div className="relative max-w-lg mx-auto animate-fade-up-1">
+          <form onSubmit={handleSearchSubmit} className="relative max-w-lg mx-auto animate-fade-up-1">
             <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-xmuted" />
             <input
               type="text"
@@ -217,16 +230,17 @@ const Home = () => {
               placeholder="Search by title, company, location, or department…"
               className="input-lg pl-11 w-full shadow-sm"
             />
-          </div>
+            <button type="submit" className="hidden">Search</button>
+          </form>
         </div>
       </section>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 animate-fade-up-2">
-          <StatCard icon={Briefcase}   value={loading ? '—' : `${jobs.length}+`} label="Open positions" />
-          <StatCard icon={Building2}   value={loading ? '—' : `${companiesCount || 1}`} label={companiesCount === 1 ? 'Company' : 'Companies'} />
-          <StatCard icon={Users}       value="1,200+" label="Candidates" />
+          <StatCard icon={Briefcase}   value={loading ? '—' : `${stats.jobsCount}+`} label="Open positions" />
+          <StatCard icon={Building2}   value={loading ? '—' : `${stats.companiesCount}`} label={stats.companiesCount === 1 ? 'Company' : 'Companies'} />
+          <StatCard icon={Users}       value={loading ? '—' : `${stats.candidatesCount}+`} label="Candidates" />
           <StatCard icon={TrendingUp}  value="98%"    label="Satisfaction" />
         </div>
 

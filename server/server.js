@@ -13,37 +13,35 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-let cachedDb = null;
-
-async function connectToDatabase() {
-    if (cachedDb) return cachedDb;
-    
-    console.log('Connecting to MongoDB...');
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/careers-kidsden', {
-        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-    });
-    
-    cachedDb = conn;
-    console.log('MongoDB Connected');
-    return conn;
-}
-
-// Middleware to ensure DB connection
-app.use(async (req, res, next) => {
-    try {
-        await connectToDatabase();
-        next();
-    } catch (err) {
-        console.error('Database connection error:', err);
-        res.status(500).json({ message: 'Database connection failed' });
-    }
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/careers-kidsden')
+    .then(async () => {
+        console.log(`MongoDB Connected to: ${mongoose.connection.name}`);
+        const User = require('./models/User');
+        const count = await User.countDocuments();
+        console.log(`Current users in database: ${count}`);
+    })
+    .catch(err => console.error('Database connection error:', err));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/company', require('./routes/company'));
+
+// Stats Route
+app.get('/api/stats', async (req, res) => {
+    try {
+        const Job = require('./models/Job');
+        const User = require('./models/User');
+        const jobsCount = await Job.countDocuments({ status: 'OPEN' });
+        const companies = await Job.distinct('postedBy', { status: 'OPEN' });
+        const companiesCount = companies.length || 1;
+        const candidatesCount = await User.countDocuments({ role: 'APPLICANT' });
+        res.json({ jobsCount, companiesCount, candidatesCount });
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching stats' });
+    }
+});
 
 // Basic Route
 app.get('/', (req, res) => {

@@ -55,10 +55,7 @@ const seedDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB Atlas...');
 
-    // Clear existing data
-    await User.deleteMany({});
-    await Job.deleteMany({});
-    console.log('Cleared existing data...');
+    // Data clearing has been removed to prevent accidental data loss.
 
     // Create a Recruiter
     const recruiter = new User({

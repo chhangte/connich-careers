@@ -1,0 +1,940 @@
+
+> client@0.0.0 lint
+> eslint .
+
+
+C:\Users\clalb\webdev2\careers\client\src\App.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\components\Footer.jsx
+  1:8   error  'React' is defined but never used      no-unused-vars
+  3:10  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\components\Navbar.jsx
+  3:10  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\About.jsx
+  1:8   error  'React' is defined but never used      no-unused-vars
+  2:10  error  'Building2' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\AdminDashboard.jsx
+   1:8  error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+  16:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  14 |       { _id: '4', name: 'Maria Teacher',   email: 'maria@kidsden.com',   role: 'APPLICANT', joined: 'Nov 2026' },
+  15 |     ];
+> 16 |     setUsers(mockUsers);
+     |     ^^^^^^^^ Avoid calling setState() directly within an effect
+  17 |     setStats({
+  18 |       total: mockUsers.length,
+  19 |       applicants: mockUsers.filter(u => u.role === 'APPLICANT').length,  react-hooks/set-state-in-effect
+
+C:\Users\clalb\webdev2\careers\client\src\pages\Apply.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\BrowseJobs.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\CompanyPage.jsx
+    1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+    3:47  error  'Clock' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+  169:69  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  167 |                   const isDeadline = job.hiringMode === 'DEADLINE' && job.lastDateToApply;
+  168 |                   const deadline = isDeadline ? new Date(job.lastDateToApply) : null;
+> 169 |                   const daysLeft = deadline ? Math.ceil((deadline - Date.now()) / 86400000) : null;
+      |                                                                     ^^^^^^^^^^ Cannot call impure function
+  170 |                   const isExpired = daysLeft !== null && daysLeft < 0;
+  171 |                   const isUrgent = daysLeft !== null && daysLeft >= 0 && daysLeft <= 7;
+  172 |  react-hooks/purity
+
+C:\Users\clalb\webdev2\careers\client\src\pages\CookiePolicy.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\Dashboard.jsx
+    1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+    3:42  error  'User' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+   51:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  49 |     // Initialize otherField if discipline is not in the list
+  50 |     if (user?.profile?.discipline && !FIELDS.includes(user.profile.discipline)) {
+> 51 |       setOtherField(user.profile.discipline);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |       setFormData(prev => ({
+  53 |         ...prev,
+  54 |         profile: { ...prev.profile, discipline: 'Other' }  react-hooks/set-state-in-effect
+  103:14  error  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   no-unused-vars
+  137:35  error  React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/rules-of-hooks
+  144:19  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  142 |     setActiveTab(label);
+  143 |     if (label === 'Notifications' && hasNewNotifications) {
+> 144 |       const now = Date.now();
+      |                   ^^^^^^^^^^ Cannot call impure function
+  145 |       localStorage.setItem('lastReadNotifications', now.toString());
+  146 |       setLastRead(now);
+  147 |     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/purity
+  511:69  error  '_' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\Home.jsx
+   1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+  33:44  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  31 |   if (job.hiringMode === 'DEADLINE' && job.lastDateToApply) {
+  32 |     const deadline = new Date(job.lastDateToApply);
+> 33 |     const daysLeft = Math.ceil((deadline - Date.now()) / 86400000);
+     |                                            ^^^^^^^^^^ Cannot call impure function
+  34 |     if (daysLeft < 0) {
+  35 |       return <span className="badge-red flex items-center gap-1"><AlertCircle size={11} /> Closed</span>;
+  36 |     }  react-hooks/purity
+  65:19  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  63 |   const initials = companyName.slice(0, 2).toUpperCase();
+  64 |   const timeAgo = job.createdAt
+> 65 |     ? Math.floor((Date.now() - new Date(job.createdAt)) / 86400000) + 'd ago'
+     |                   ^^^^^^^^^^ Cannot call impure function
+  66 |     : 'Recently';
+  67 |
+  68 |   return (                                                                                                                                                    react-hooks/purity
+
+C:\Users\clalb\webdev2\careers\client\src\pages\JobDetails.jsx
+   1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  70:19  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  68 |   const style = getDeptStyle(job.department);
+  69 |   const timeAgo = job.createdAt
+> 70 |     ? Math.floor((Date.now() - new Date(job.createdAt)) / 86400000) + ' days ago'
+     |                   ^^^^^^^^^^ Cannot call impure function
+  71 |     : 'Recently';
+  72 |
+  73 |   const company = job.postedBy?.company || {};  react-hooks/purity
+
+C:\Users\clalb\webdev2\careers\client\src\pages\Login.jsx
+  1:8   error  'React' is defined but never used      no-unused-vars
+  3:23  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\PrivacyPolicy.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\RecruiterDashboard.jsx
+     1:8   error    'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+   405:9   error    'qualSummary' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               no-unused-vars
+   454:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  452 |         {/* Body */}
+  453 |         <div className="flex-1 overflow-y-auto px-6 py-4">
+> 454 |           <SectionHead title="Personal Information" />
+      |            ^^^^^^^^^^^ This component is created during render
+  455 |           <Row label="Full Name" value={name} />
+  456 |           <Row label="Email" value={d.email || app.applicant?.email} />
+  457 |           <Row label="Phone" value={d.phone} />
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+   455:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  453 |         <div className="flex-1 overflow-y-auto px-6 py-4">
+  454 |           <SectionHead title="Personal Information" />
+> 455 |           <Row label="Full Name" value={name} />
+      |            ^^^ This component is created during render
+  456 |           <Row label="Email" value={d.email || app.applicant?.email} />
+  457 |           <Row label="Phone" value={d.phone} />
+  458 |           <Row label="Date of Birth" value={d.dob} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                  react-hooks/static-components
+   456:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  454 |           <SectionHead title="Personal Information" />
+  455 |           <Row label="Full Name" value={name} />
+> 456 |           <Row label="Email" value={d.email || app.applicant?.email} />
+      |            ^^^ This component is created during render
+  457 |           <Row label="Phone" value={d.phone} />
+  458 |           <Row label="Date of Birth" value={d.dob} />
+  459 |           <Row label="Address" value={d.address} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                         react-hooks/static-components
+   457:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  455 |           <Row label="Full Name" value={name} />
+  456 |           <Row label="Email" value={d.email || app.applicant?.email} />
+> 457 |           <Row label="Phone" value={d.phone} />
+      |            ^^^ This component is created during render
+  458 |           <Row label="Date of Birth" value={d.dob} />
+  459 |           <Row label="Address" value={d.address} />
+  460 |           <Row label="Marital Status" value={d.maritalStatus} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                               react-hooks/static-components
+   458:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  456 |           <Row label="Email" value={d.email || app.applicant?.email} />
+  457 |           <Row label="Phone" value={d.phone} />
+> 458 |           <Row label="Date of Birth" value={d.dob} />
+      |            ^^^ This component is created during render
+  459 |           <Row label="Address" value={d.address} />
+  460 |           <Row label="Marital Status" value={d.maritalStatus} />
+  461 |
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                                react-hooks/static-components
+   459:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  457 |           <Row label="Phone" value={d.phone} />
+  458 |           <Row label="Date of Birth" value={d.dob} />
+> 459 |           <Row label="Address" value={d.address} />
+      |            ^^^ This component is created during render
+  460 |           <Row label="Marital Status" value={d.maritalStatus} />
+  461 |
+  462 |           <SectionHead title="Family" />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                                                               react-hooks/static-components
+   460:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  458 |           <Row label="Date of Birth" value={d.dob} />
+  459 |           <Row label="Address" value={d.address} />
+> 460 |           <Row label="Marital Status" value={d.maritalStatus} />
+      |            ^^^ This component is created during render
+  461 |
+  462 |           <SectionHead title="Family" />
+  463 |           <Row label="Father's Name" value={d.fatherName} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                                                  react-hooks/static-components
+   462:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  460 |           <Row label="Marital Status" value={d.maritalStatus} />
+  461 |
+> 462 |           <SectionHead title="Family" />
+      |            ^^^^^^^^^^^ This component is created during render
+  463 |           <Row label="Father's Name" value={d.fatherName} />
+  464 |           <Row label="Father's Phone" value={d.fatherPhone} />
+  465 |           <Row label="Mother's Name" value={d.motherName} />
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/static-components
+   463:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  461 |
+  462 |           <SectionHead title="Family" />
+> 463 |           <Row label="Father's Name" value={d.fatherName} />
+      |            ^^^ This component is created during render
+  464 |           <Row label="Father's Phone" value={d.fatherPhone} />
+  465 |           <Row label="Mother's Name" value={d.motherName} />
+  466 |           <Row label="Mother's Phone" value={d.motherPhone} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                                  react-hooks/static-components
+   464:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  462 |           <SectionHead title="Family" />
+  463 |           <Row label="Father's Name" value={d.fatherName} />
+> 464 |           <Row label="Father's Phone" value={d.fatherPhone} />
+      |            ^^^ This component is created during render
+  465 |           <Row label="Mother's Name" value={d.motherName} />
+  466 |           <Row label="Mother's Phone" value={d.motherPhone} />
+  467 |
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                                  react-hooks/static-components
+   465:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  463 |           <Row label="Father's Name" value={d.fatherName} />
+  464 |           <Row label="Father's Phone" value={d.fatherPhone} />
+> 465 |           <Row label="Mother's Name" value={d.motherName} />
+      |            ^^^ This component is created during render
+  466 |           <Row label="Mother's Phone" value={d.motherPhone} />
+  467 |
+  468 |           <SectionHead title="Educational Background" />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                  react-hooks/static-components
+   466:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  464 |           <Row label="Father's Phone" value={d.fatherPhone} />
+  465 |           <Row label="Mother's Name" value={d.motherName} />
+> 466 |           <Row label="Mother's Phone" value={d.motherPhone} />
+      |            ^^^ This component is created during render
+  467 |
+  468 |           <SectionHead title="Educational Background" />
+  469 |           <Row label="Highest Qualification" value={d.highestQualification} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                react-hooks/static-components
+   468:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  466 |           <Row label="Mother's Phone" value={d.motherPhone} />
+  467 |
+> 468 |           <SectionHead title="Educational Background" />
+      |            ^^^^^^^^^^^ This component is created during render
+  469 |           <Row label="Highest Qualification" value={d.highestQualification} />
+  470 |           <Row label="Field" value={d.discipline} />
+  471 |           <Row label="Primary School" value={d.primarySchool} />
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/static-components
+   469:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  467 |
+  468 |           <SectionHead title="Educational Background" />
+> 469 |           <Row label="Highest Qualification" value={d.highestQualification} />
+      |            ^^^ This component is created during render
+  470 |           <Row label="Field" value={d.discipline} />
+  471 |           <Row label="Primary School" value={d.primarySchool} />
+  472 |           <Row label="Middle School" value={d.middleSchool} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                      react-hooks/static-components
+   470:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  468 |           <SectionHead title="Educational Background" />
+  469 |           <Row label="Highest Qualification" value={d.highestQualification} />
+> 470 |           <Row label="Field" value={d.discipline} />
+      |            ^^^ This component is created during render
+  471 |           <Row label="Primary School" value={d.primarySchool} />
+  472 |           <Row label="Middle School" value={d.middleSchool} />
+  473 |           <Row label="High School" value={d.highSchool} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                           react-hooks/static-components
+   471:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  469 |           <Row label="Highest Qualification" value={d.highestQualification} />
+  470 |           <Row label="Field" value={d.discipline} />
+> 471 |           <Row label="Primary School" value={d.primarySchool} />
+      |            ^^^ This component is created during render
+  472 |           <Row label="Middle School" value={d.middleSchool} />
+  473 |           <Row label="High School" value={d.highSchool} />
+  474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                  react-hooks/static-components
+   472:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  470 |           <Row label="Field" value={d.discipline} />
+  471 |           <Row label="Primary School" value={d.primarySchool} />
+> 472 |           <Row label="Middle School" value={d.middleSchool} />
+      |            ^^^ This component is created during render
+  473 |           <Row label="High School" value={d.highSchool} />
+  474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+  475 |           <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                              react-hooks/static-components
+   473:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  471 |           <Row label="Primary School" value={d.primarySchool} />
+  472 |           <Row label="Middle School" value={d.middleSchool} />
+> 473 |           <Row label="High School" value={d.highSchool} />
+      |            ^^^ This component is created during render
+  474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+  475 |           <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
+  476 |           <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>  react-hooks/static-components
+   474:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  472 |           <Row label="Middle School" value={d.middleSchool} />
+  473 |           <Row label="High School" value={d.highSchool} />
+> 474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+      |            ^^^ This component is created during render
+  475 |           <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
+  476 |           <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
+  477 |
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                   react-hooks/static-components
+   475:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  473 |           <Row label="High School" value={d.highSchool} />
+  474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+> 475 |           <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
+      |            ^^^ This component is created during render
+  476 |           <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
+  477 |
+  478 |           <SectionHead title="Work Experience" />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                react-hooks/static-components
+   476:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  474 |           <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
+  475 |           <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
+> 476 |           <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
+      |            ^^^ This component is created during render
+  477 |
+  478 |           <SectionHead title="Work Experience" />
+  479 |           <div className="py-2.5 border-b border-border">
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                 react-hooks/static-components
+   478:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  476 |           <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
+  477 |
+> 478 |           <SectionHead title="Work Experience" />
+      |            ^^^^^^^^^^^ This component is created during render
+  479 |           <div className="py-2.5 border-b border-border">
+  480 |             <p className="text-xs text-text-xmuted mb-1">Experience</p>
+  481 |             <p className="text-sm text-text whitespace-pre-wrap">{d.experience || '—'}</p>
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/static-components
+   483:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  481 |             <p className="text-sm text-text whitespace-pre-wrap">{d.experience || '—'}</p>
+  482 |           </div>
+> 483 |           <Row label="Reference Name" value={d.referenceeName} />
+      |            ^^^ This component is created during render
+  484 |           <Row label="Reference Phone" value={d.referencePhone} />
+  485 |
+  486 |           <SectionHead title="Application Details" />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                                                            react-hooks/static-components
+   484:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  482 |           </div>
+  483 |           <Row label="Reference Name" value={d.referenceeName} />
+> 484 |           <Row label="Reference Phone" value={d.referencePhone} />
+      |            ^^^ This component is created during render
+  485 |
+  486 |           <SectionHead title="Application Details" />
+  487 |           <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                            react-hooks/static-components
+   486:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  484 |           <Row label="Reference Phone" value={d.referencePhone} />
+  485 |
+> 486 |           <SectionHead title="Application Details" />
+      |            ^^^^^^^^^^^ This component is created during render
+  487 |           <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
+  488 |           <Row label="Application ID" value={app._id} />
+  489 |
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/static-components
+   487:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  485 |
+  486 |           <SectionHead title="Application Details" />
+> 487 |           <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
+      |            ^^^ This component is created during render
+  488 |           <Row label="Application ID" value={app._id} />
+  489 |
+  490 |           <SectionHead title="Message Applicant" />
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                                                     react-hooks/static-components
+   488:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  486 |           <SectionHead title="Application Details" />
+  487 |           <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
+> 488 |           <Row label="Application ID" value={app._id} />
+      |            ^^^ This component is created during render
+  489 |
+  490 |           <SectionHead title="Message Applicant" />
+  491 |           <div className="pt-2">
+
+  406 |   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+  407 |
+> 408 |   const Row = ({ label, value }) => (
+      |               ^^^^^^^^^^^^^^^^^^^^^^^
+> 409 |     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 410 |       <span className="text-xs text-text-xmuted w-44 shrink-0 pt-0.5">{label}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 411 |       <span className="text-sm text-text font-medium break-words">{value || '—'}</span>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 412 |     </div>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 413 |   );
+      | ^^^^ The component is created during render here
+  414 |
+  415 |   const SectionHead = ({ title }) => (
+  416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>                                                                    react-hooks/static-components
+   490:12  error    Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+  488 |           <Row label="Application ID" value={app._id} />
+  489 |
+> 490 |           <SectionHead title="Message Applicant" />
+      |            ^^^^^^^^^^^ This component is created during render
+  491 |           <div className="pt-2">
+  492 |             <textarea
+  493 |               rows={3}
+
+  413 |   );
+  414 |
+> 415 |   const SectionHead = ({ title }) => (
+      |                       ^^^^^^^^^^^^^^^^
+> 416 |     <p className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mt-5 mb-1">{title}</p>
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 417 |   );
+      | ^^^^ The component is created during render here
+  418 |
+  419 |   return (
+  420 |     <div                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/static-components
+   507:26  error    'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   673:6   warning  React Hook useEffect has missing dependencies: 'user._id' and 'user.id'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+  1038:33  error    's' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\RecruiterLogin.jsx
+  1:8   error  'React' is defined but never used      no-unused-vars
+  3:23  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\RecruiterSignup.jsx
+  1:27  error  'useRef' is defined but never used     no-unused-vars
+  3:83  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\Signup.jsx
+  1:8   error  'React' is defined but never used      no-unused-vars
+  3:23  error  'Briefcase' is defined but never used  no-unused-vars
+
+C:\Users\clalb\webdev2\careers\client\src\pages\TermsOfService.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+✖ 69 problems (68 errors, 1 warning)
+

@@ -12,6 +12,14 @@ const STATUS_MAP = {
   JOINED:      { label: 'Joined',       cls: 'badge-blue'   },
 };
 
+const QUALIFICATIONS = [
+  'HSS (Year 12)', 'Diploma', 'Bachelors', 'Masters', 'PhD',
+];
+
+const FIELDS = [
+  'Arts', 'Science', 'Commerce', 'Business / Management', 'Engineering / Technology', 'Design and Media', 'Law', 'Medicine', 'Other',
+];
+
 const Dashboard = ({ user, setUser }) => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +27,7 @@ const Dashboard = ({ user, setUser }) => {
 
   const [activeTab, setActiveTab] = useState('My Applications');
   const [activeApp, setActiveApp] = useState(null); // Slide-over
+  const [otherField, setOtherField] = useState('');
 
   // Account Settings state
   const [formData, setFormData] = useState({
@@ -37,6 +46,14 @@ const Dashboard = ({ user, setUser }) => {
 
   useEffect(() => {
     if (!user) { navigate('/login'); return; }
+    // Initialize otherField if discipline is not in the list
+    if (user?.profile?.discipline && !FIELDS.includes(user.profile.discipline)) {
+      setOtherField(user.profile.discipline);
+      setFormData(prev => ({
+        ...prev,
+        profile: { ...prev.profile, discipline: 'Other' }
+      }));
+    }
     const fetchApplications = async () => {
       try {
         const res = await axios.get(`${API_BASE_URL}/applications/my/${user.id || user._id}`);
@@ -66,10 +83,14 @@ const Dashboard = ({ user, setUser }) => {
     e.preventDefault();
     setSaving(true);
     try {
+      const disc = formData.profile.discipline === 'Other' ? otherField : formData.profile.discipline;
       const payload = {
         name: formData.name,
         email: formData.email,
-        profile: formData.profile
+        profile: {
+          ...formData.profile,
+          discipline: disc
+        }
       };
       if (formData.password) payload.password = formData.password;
 
@@ -366,13 +387,31 @@ const Dashboard = ({ user, setUser }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="field-group">
                             <label className="label">Highest Qualification</label>
-                            <input type="text" className="input" value={formData.profile.highestQualification} onChange={(e) => handleProfileChange('highestQualification', e.target.value)} />
+                            <div className="relative">
+                              <select className="input appearance-none cursor-pointer" value={formData.profile.highestQualification} onChange={(e) => handleProfileChange('highestQualification', e.target.value)}>
+                                <option value="">Select qualification…</option>
+                                {QUALIFICATIONS.map(q => <option key={q} value={q}>{q}</option>)}
+                              </select>
+                              <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-xmuted rotate-90" />
+                            </div>
                           </div>
                           <div className="field-group">
-                            <label className="label">Discipline</label>
-                            <input type="text" className="input" value={formData.profile.discipline} onChange={(e) => handleProfileChange('discipline', e.target.value)} />
+                            <label className="label">Field</label>
+                            <div className="relative">
+                              <select className="input appearance-none cursor-pointer" value={formData.profile.discipline} onChange={(e) => handleProfileChange('discipline', e.target.value)}>
+                                <option value="">Select field…</option>
+                                {FIELDS.map(f => <option key={f} value={f}>{f}</option>)}
+                              </select>
+                              <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-xmuted rotate-90" />
+                            </div>
                           </div>
-                          <div className="field-group">
+                          {formData.profile.discipline === 'Other' && (
+                            <div className="field-group md:col-span-2">
+                              <label className="label">Specify Other Field</label>
+                              <input type="text" className="input" value={otherField} onChange={(e) => setOtherField(e.target.value)} placeholder="Enter your field of study" />
+                            </div>
+                          )}
+                          <div className="field-group md:col-span-2">
                             <label className="label">Undergraduate Institute</label>
                             <input type="text" className="input" value={formData.profile.undergraduateInstitute} onChange={(e) => handleProfileChange('undergraduateInstitute', e.target.value)} />
                           </div>
@@ -469,12 +508,15 @@ const Dashboard = ({ user, setUser }) => {
               <div className="mb-5">
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-text-xmuted mb-3 px-1">Submitted Information</h3>
                 <div className="card p-4 space-y-3">
-                  {Object.entries(activeApp.details || {}).filter(([_, val]) => val).map(([key, val]) => (
-                    <div key={key}>
-                      <span className="block text-[11px] text-text-xmuted capitalize mb-0.5">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
-                      <span className="block text-sm text-text whitespace-pre-wrap">{val}</span>
-                    </div>
-                  ))}
+                  {Object.entries(activeApp.details || {}).filter(([_, val]) => val).map(([key, val]) => {
+                    const label = key === 'discipline' ? 'Field' : key.replace(/([A-Z])/g, ' $1').trim();
+                    return (
+                      <div key={key}>
+                        <span className="block text-[11px] text-text-xmuted capitalize mb-0.5">{label}</span>
+                        <span className="block text-sm text-text whitespace-pre-wrap">{val}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
