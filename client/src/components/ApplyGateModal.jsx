@@ -23,17 +23,17 @@ const ApplyGateModal = ({ isOpen, onClose, jobId, company }) => {
   const primary = company?.brandPrimary || '#2563eb';
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(8px)' }}>
-      <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-fade-up">
+    <div className="fixed inset-0 z-[60] flex items-start sm:items-center justify-center px-4 py-6 sm:py-10 overflow-y-auto" style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(8px)' }}>
+      <div className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden animate-fade-up my-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${primary}15` }}>
               <Mail size={20} style={{ color: primary }} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Choose how to apply</h2>
-              <p className="text-sm text-gray-500">To proceed with your application for this role</p>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">Choose how to apply</h2>
+              <p className="text-xs sm:text-sm text-gray-500">To proceed with your application</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -43,17 +43,17 @@ const ApplyGateModal = ({ isOpen, onClose, jobId, company }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Option 1: Create Account */}
-          <div className="p-8 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30">
+          <div className="p-6 sm:p-8 border-b md:border-b-0 md:border-r border-gray-100 bg-gray-50/30">
             <div className="mb-6">
               <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center mb-4">
                 <UserPlus size={24} className="text-blue-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Create an Account on Connich</h3>
-              <p className="text-sm text-gray-500 leading-relaxed mb-6">
-                Recommended for the best experience.
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Create an Account</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                Recommended for tracking and direct messaging.
               </p>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-2.5 mb-6">
                 <li className="flex items-center gap-3 text-sm text-gray-600">
                   <LayoutDashboard size={16} className="text-green-500" /> Track status in real-time
                 </li>
@@ -75,14 +75,14 @@ const ApplyGateModal = ({ isOpen, onClose, jobId, company }) => {
           </div>
 
           {/* Option 2: Continue as Guest */}
-          <div className="p-8 bg-white">
+          <div className="p-6 sm:p-8 bg-white">
             <div className="mb-6">
               <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center mb-4">
                 <Mail size={24} className="text-gray-400" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Continue with Email</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Continue as Guest</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Apply quickly without an account. <span className="font-medium text-gray-900">All updates will be sent only to your email.</span>
+                Apply quickly without an account. <span className="font-medium text-gray-900">Updates will be sent to your email.</span>
               </p>
             </div>
 
@@ -107,10 +107,10 @@ const ApplyGateModal = ({ isOpen, onClose, jobId, company }) => {
                 Continue as Guest
               </button>
 
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-100 mt-4">
-                <p className="text-[10px] text-amber-700 leading-relaxed uppercase font-bold tracking-tight mb-1">Important Notice</p>
-                <p className="text-[11px] text-amber-600 leading-relaxed">
-                  You will not be able to check your application status from this portal. Updates are sent via email only.
+              <div className="p-3.5 rounded-xl bg-amber-50/50 border border-amber-100/50 mt-4">
+                <p className="text-[11px] text-amber-700 leading-tight">
+                  <span className="font-bold uppercase text-[9px] tracking-wider mr-1">Notice:</span>
+                  Status updates are sent via email only. No portal tracking for guests.
                 </p>
               </div>
             </form>
