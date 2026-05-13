@@ -272,7 +272,6 @@ const Home = () => {
             </Link>
          </div>
       </div>
-      </div>
     </div>
   );
 };
