@@ -57,10 +57,10 @@ const Home = () => {
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <Link to="/browse" className="btn-primary-lg px-8 py-4 rounded-2xl shadow-xl shadow-accent/20">
+              <Link to="/browse" className="btn-primary-lg px-8 py-4 rounded-xl">
                 Explore Jobs
               </Link>
-              <button className="btn-outline px-8 py-4 rounded-2xl flex items-center gap-2 border-2">
+              <button className="btn-outline px-8 py-4 rounded-xl flex items-center gap-2 border-2">
                 <Play size={18} className="fill-text" />
                 Request Demo
               </button>
@@ -82,7 +82,7 @@ const Home = () => {
 
           {/* Hero Form / Card */}
           <div className="animate-fade-up-1">
-             <div className="glass p-8 sm:p-10 rounded-[2.5rem] shadow-2xl border border-white/50 relative overflow-hidden">
+             <div className="glass p-8 sm:p-10 rounded-2xl border border-white/50 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 blur-3xl" />
                 
                 <h3 className="text-2xl font-semibold text-text mb-2">Start your journey</h3>
@@ -141,7 +141,7 @@ const Home = () => {
                 { label: 'Faster time to hire', value: '3X', color: 'text-accent' },
                 { label: 'Application rates', value: '7X', color: 'text-emerald-500' },
               ].map((stat, i) => (
-                <div key={i} className="glass-dark p-8 rounded-3xl border-white/5 group hover:border-white/20 transition-all">
+                <div key={i} className="glass-dark p-8 rounded-2xl border-white/5 group hover:border-white/20 transition-all hover:shadow-xl">
                   <div className={`text-5xl font-bold mb-4 ${stat.color} group-hover:scale-110 transition-transform origin-left`}>
                     {stat.value}
                   </div>
@@ -175,7 +175,7 @@ const Home = () => {
                  { title: 'Secure & Compliant', desc: 'Enterprise-grade security and GDPR compliance baked into the core. Your data is safe with us.', icon: Shield, accent: 'bg-rose-50 text-rose-600' },
                  { title: 'Custom Branding', desc: 'Create a career site that feels like home. Full control over colors, fonts, and layout.', icon: Layers, accent: 'bg-amber-50 text-amber-600' },
                ].map((feat, i) => (
-                 <div key={i} className="group p-12 rounded-[3rem] bg-white border border-border/60 hover:border-accent hover:shadow-2xl hover:shadow-accent/5 transition-all duration-500">
+                 <div key={i} className="group p-12 rounded-2xl bg-white border border-border/60 hover:border-accent hover:shadow-xl transition-all duration-500">
                     <div className={`w-16 h-16 rounded-2xl ${feat.accent} flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500`}>
                        <feat.icon size={32} strokeWidth={1.5} />
                     </div>
@@ -224,7 +224,7 @@ const Home = () => {
                  { name: 'Notion', icon: 'N', color: 'text-slate-800' },
                  { name: 'Jira', icon: 'J', color: 'text-blue-500' },
                ].map((brand, i) => (
-                 <div key={i} className="aspect-square bg-white border border-border/60 rounded-[2rem] flex flex-col items-center justify-center gap-4 hover:border-accent hover:shadow-xl transition-all duration-300 group">
+                 <div key={i} className="aspect-square bg-white border border-border/60 rounded-xl flex flex-col items-center justify-center gap-4 hover:border-accent hover:shadow-lg transition-all duration-300 group">
                     <div className={`text-3xl font-bold ${brand.color} group-hover:scale-125 transition-transform`}>
                        {brand.icon}
                     </div>
@@ -257,7 +257,7 @@ const Home = () => {
       {/* ── FINAL CTA ────────────────────────────── */}
       <section className="pb-32 px-6">
          <div className="max-w-7xl mx-auto">
-            <div className="bg-accent rounded-[3rem] p-12 sm:p-24 text-center text-white relative overflow-hidden shadow-2xl shadow-accent/30">
+            <div className="bg-accent rounded-3xl p-12 sm:p-24 text-center text-white relative overflow-hidden">
                <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-float" />
                <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full -ml-32 -mb-32 blur-3xl" />
                
@@ -267,10 +267,10 @@ const Home = () => {
                     with our ATS
                   </h2>
                   <div className="flex flex-wrap justify-center gap-4">
-                     <Link to="/signup" className="px-10 py-5 bg-white text-accent rounded-2xl font-semibold text-lg hover:scale-105 transition-all shadow-xl">
+                     <Link to="/signup" className="px-10 py-5 bg-white text-accent rounded-xl font-semibold text-lg hover:scale-105 transition-all hover:shadow-xl">
                         Get Started
                      </Link>
-                     <button className="px-10 py-5 bg-accent-hover text-white border border-white/20 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all">
+                     <button className="px-10 py-5 bg-accent-hover text-white border border-white/20 rounded-xl font-semibold text-lg hover:bg-white/10 transition-all hover:shadow-lg">
                         Register for a demo
                      </button>
                   </div>
