@@ -456,46 +456,157 @@ const generateBioData = async (app, jobTitle, companyName) => {
     const val = (v, fallback = '—') => v || fallback;
 
     const htmlContent = `
-<div style="font-family: 'Inter', sans-serif; font-size: 10pt; color: #0f172a; line-height: 1.5; padding: 0; background: white;">
+<div style="font-family: 'Inter', sans-serif; font-size: 10pt; color: #000; line-height: 1.4; padding: 0; background: white;">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #0f172a; }
-    .header-info h1 { font-size: 22pt; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 4px; }
-    .header-info .job-title { font-size: 12pt; font-weight: 600; color: #2563eb; margin-bottom: 8px; }
-    .header-info .meta { font-size: 9pt; color: #64748b; }
-    .photo-placeholder { width: 100px; height: 120px; border: 1px dashed #e2e8f0; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 8pt; color: #64748b; border-radius: 4px; }
-    .section { margin-bottom: 24px; }
-    .section-title { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #0f172a; margin-bottom: 12px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px; }
+    
+    * { box-sizing: border-box; }
+    
+    .page-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-start; 
+      margin-bottom: 25px; 
+      padding-bottom: 15px; 
+      border-bottom: 2px solid #000; 
+    }
+    
+    .header-info h1 { 
+      font-size: 20pt; 
+      font-weight: 800; 
+      color: #000; 
+      text-transform: uppercase; 
+      letter-spacing: -0.01em; 
+      margin-bottom: 2px; 
+    }
+    
+    .header-info .job-title { 
+      font-size: 11pt; 
+      font-weight: 700; 
+      color: #374151; 
+      margin-bottom: 6px; 
+    }
+    
+    .header-info .meta { 
+      font-size: 8.5pt; 
+      color: #6b7280; 
+    }
+    
+    .photo-placeholder { 
+      width: 90px; 
+      height: 110px; 
+      border: 1px solid #000; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      text-align: center; 
+      font-size: 7pt; 
+      color: #000; 
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .section { margin-bottom: 20px; }
+    
+    .section-title { 
+      font-size: 9.5pt; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      letter-spacing: 0.05em; 
+      color: #000; 
+      margin-bottom: 10px; 
+      padding: 4px 8px; 
+      background: #f3f4f6;
+      border-left: 4px solid #000;
+    }
+    
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 10px 20px; 
+      padding: 0 8px;
+    }
+    
     .data-item { display: flex; flex-direction: column; }
-    .data-label { font-size: 8pt; font-weight: 600; color: #64748b; text-transform: uppercase; }
-    .data-value { font-size: 10pt; font-weight: 500; }
+    
+    .data-label { 
+      font-size: 7.5pt; 
+      font-weight: 700; 
+      color: #4b5563; 
+      text-transform: uppercase; 
+      margin-bottom: 1px;
+    }
+    
+    .data-value { font-size: 9.5pt; font-weight: 500; color: #000; }
+    
     .full-width { grid-column: span 2; }
-    .education-item, .experience-item { margin-bottom: 12px; padding: 10px; background: #f8fafc; border-radius: 6px; }
-    .item-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .item-title { font-weight: 700; font-size: 10.5pt; }
-    .item-subtitle { font-weight: 500; color: #2563eb; font-size: 9.5pt; }
-    .item-meta { font-size: 9pt; color: #64748b; }
-    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-    .badge { background: #eff6ff; color: #2563eb; font-size: 8pt; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
-    .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 9pt; }
-    .signature-line { width: 180px; border-top: 1px solid #0f172a; text-align: center; padding-top: 6px; font-weight: 600; }
-    .system-footer { margin-top: 60px; padding-top: 8px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 8pt; color: #64748b; }
-    .brand-connich { font-weight: 700; color: #0f172a; }
+    
+    .list-item { 
+      margin-bottom: 8px; 
+      padding: 8px; 
+      border: 1px solid #e5e7eb;
+      background: #fff;
+    }
+    
+    .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+    .item-title { font-weight: 700; font-size: 10pt; color: #000; }
+    .item-subtitle { font-weight: 600; color: #374151; font-size: 9pt; }
+    .item-meta { font-size: 8.5pt; color: #6b7280; font-weight: 500; }
+
+    .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+    .badge { 
+      background: #f3f4f6; 
+      color: #000; 
+      font-size: 8pt; 
+      padding: 2px 8px; 
+      border: 1px solid #d1d5db;
+      font-weight: 600; 
+    }
+
+    .footer { 
+      margin-top: 35px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: flex-end; 
+      font-size: 9pt;
+      padding: 0 8px;
+    }
+    
+    .signature-line { 
+      width: 170px; 
+      border-top: 1px solid #000; 
+      text-align: center; 
+      padding-top: 5px; 
+      font-weight: 700; 
+      text-transform: uppercase;
+      font-size: 8pt;
+    }
+
+    .system-footer { 
+      margin-top: 50px; 
+      padding-top: 8px; 
+      border-top: 1px solid #e5e7eb; 
+      display: flex; 
+      justify-content: space-between; 
+      font-size: 7.5pt; 
+      color: #9ca3af; 
+    }
+    
+    .brand-connich { font-weight: 700; color: #4b5563; }
   </style>
 
   <div class="page-header">
     <div class="header-info">
-      <div class="meta">Candidate's Bio-Data Sheet - ${val(companyName, 'Connich Recruit')}</div>
+      <div class="meta">Bio-Data Sheet — ${val(companyName, 'Connich Recruit')}</div>
       <h1>${val(name)}</h1>
-      <div class="job-title">Position: ${val(jobTitle)}</div>
-      <div class="meta">Applied on ${appliedDate} · ID: ${appId}</div>
+      <div class="job-title">Applied For: ${val(jobTitle)}</div>
+      <div class="meta">Submission Date: ${appliedDate} · App ID: ${appId}</div>
     </div>
-    <div class="photo-placeholder">Candidate Photo</div>
+    <div class="photo-placeholder">Paste Photograph Here</div>
   </div>
 
   <div class="section">
-    <h2 class="section-title">Personal Information</h2>
+    <div class="section-title">Personal Information</div>
     <div class="grid">
       <div class="data-item"><span class="data-label">Full Name</span><span class="data-value">${val(name)}</span></div>
       <div class="data-item"><span class="data-label">Email Address</span><span class="data-value">${val(email)}</span></div>
@@ -512,7 +623,7 @@ const generateBioData = async (app, jobTitle, companyName) => {
   </div>
 
   <div class="section">
-    <h2 class="section-title">Family Information</h2>
+    <div class="section-title">Family Information</div>
     <div class="grid">
       <div class="data-item"><span class="data-label">Father's Name</span><span class="data-value">${val(d.fatherName)}</span></div>
       <div class="data-item"><span class="data-label">Father's Contact</span><span class="data-value">${val(d.fatherPhone)}</span></div>
@@ -522,16 +633,19 @@ const generateBioData = async (app, jobTitle, companyName) => {
   </div>
 
   <div class="section">
-    <h2 class="section-title">Educational Background</h2>
-    ${Array.isArray(d.postgraduates) && d.postgraduates.length > 0 ? d.postgraduates.filter(pg => pg.institute || pg.course).map(pg => `
-      <div class="education-item">
-        <div class="item-header"><span class="item-title">${pg.institute}</span><span class="item-meta">Postgraduate</span></div>
-        <div class="item-subtitle">${pg.course}</div>
-      </div>
-    `).join('') : ''}
-    ${d.undergraduateInstitute ? `<div class="education-item"><div class="item-header"><span class="item-title">${d.undergraduateInstitute}</span><span class="item-meta">Undergraduate</span></div><div class="item-subtitle">${d.ugCourse || 'Bachelors'}</div></div>` : ''}
-    ${d.diplomaInstitute ? `<div class="education-item"><div class="item-header"><span class="item-title">${d.diplomaInstitute}</span><span class="item-meta">Diploma</span></div><div class="item-subtitle">${d.diplomaCourse}</div></div>` : ''}
-    <div class="grid" style="margin-top: 10px;">
+    <div class="section-title">Educational Background</div>
+    <div style="padding: 0 8px;">
+      ${Array.isArray(d.postgraduates) && d.postgraduates.length > 0 ? d.postgraduates.filter(pg => pg.institute || pg.course).map(pg => `
+        <div class="list-item">
+          <div class="item-header"><span class="item-title">${pg.institute}</span><span class="item-meta">Postgraduate</span></div>
+          <div class="item-subtitle">${pg.course}</div>
+        </div>
+      `).join('') : ''}
+      ${d.undergraduateInstitute ? `<div class="list-item"><div class="item-header"><span class="item-title">${d.undergraduateInstitute}</span><span class="item-meta">Undergraduate</span></div><div class="item-subtitle">${d.ugCourse || 'Bachelors'}</div></div>` : ''}
+      ${d.diplomaInstitute ? `<div class="list-item"><div class="item-header"><span class="item-title">${d.diplomaInstitute}</span><span class="item-meta">Diploma</span></div><div class="item-subtitle">${d.diplomaCourse}</div></div>` : ''}
+    </div>
+    
+    <div class="grid" style="margin-top: 5px;">
       ${d.higherSecondarySchool ? `<div class="data-item"><span class="data-label">Hr. Secondary School</span><span class="data-value">${d.higherSecondarySchool} ${d.hscStream ? `(${d.hscStream})` : ''}</span></div>` : ''}
       <div class="data-item"><span class="data-label">High School (Class 10)</span><span class="data-value">${val(d.highSchool)}</span></div>
       <div class="data-item"><span class="data-label">Middle School</span><span class="data-value">${val(d.middleSchool)}</span></div>
@@ -541,19 +655,24 @@ const generateBioData = async (app, jobTitle, companyName) => {
 
   ${!d.isFresher && Array.isArray(d.experiences) && d.experiences.some(exp => exp.jobTitle) ? `
     <div class="section">
-      <h2 class="section-title">Work Experience</h2>
-      ${d.experiences.filter(exp => exp.jobTitle).map(exp => `
-        <div class="experience-item">
-          <div class="item-header"><span class="item-title">${exp.jobTitle}</span><span class="item-meta">${exp.fromMonth} ${exp.fromYear} — ${exp.toMonth} ${exp.toYear}</span></div>
-          <div class="data-value" style="font-size: 9pt; margin-top: 4px;">${val(exp.description)}</div>
-          ${exp.referenceName ? `<div style="margin-top: 8px; border-top: 1px solid #eee; padding-top: 4px;"><span class="data-label" style="font-size: 7pt;">Reference:</span><span class="data-value" style="font-size: 8pt;">${exp.referenceName} (${exp.referencePhone})</span></div>` : ''}
-        </div>
-      `).join('')}
+      <div class="section-title">Professional Experience</div>
+      <div style="padding: 0 8px;">
+        ${d.experiences.filter(exp => exp.jobTitle).map(exp => `
+          <div class="list-item">
+            <div class="item-header">
+              <span class="item-title">${exp.jobTitle}</span>
+              <span class="item-meta">${exp.fromMonth} ${exp.fromYear} — ${exp.toMonth} ${exp.toYear}</span>
+            </div>
+            <div class="data-value" style="font-size: 8.5pt; margin-top: 4px; color: #374151;">${val(exp.description)}</div>
+            ${exp.referenceName ? `<div style="margin-top: 6px; border-top: 1px dashed #d1d5db; padding-top: 4px;"><span class="data-label" style="font-size: 7pt;">Reference:</span> <span class="data-value" style="font-size: 8pt;">${exp.referenceName} (${exp.referencePhone})</span></div>` : ''}
+          </div>
+        `).join('')}
+      </div>
     </div>
   ` : ''}
 
   <div class="section">
-    <h2 class="section-title">Skills & Extracurriculars</h2>
+    <div class="section-title">Skills & Extracurriculars</div>
     <div class="grid">
       <div class="data-item full-width">
         <span class="data-label">Languages Known</span>
@@ -561,18 +680,18 @@ const generateBioData = async (app, jobTitle, companyName) => {
       </div>
       ${d.sports?.name ? `<div class="data-item"><span class="data-label">Sports</span><span class="data-value">${d.sports.name} ${d.sports.description ? `(${d.sports.description})` : ''}</span></div>` : ''}
       ${d.music?.name ? `<div class="data-item"><span class="data-label">Music</span><span class="data-value">${d.music.name} ${d.music.description ? `(${d.music.description})` : ''}</span></div>` : ''}
-      ${d.arts?.name ? `<div class="data-item"><span class="data-label">Fine/Performing Arts</span><span class="data-value">${d.arts.name} ${d.arts.description ? `(${d.arts.description})` : ''}</span></div>` : ''}
+      ${d.arts?.name ? `<div class="data-item"><span class="data-label">Arts & Performance</span><span class="data-value">${d.arts.name} ${d.arts.description ? `(${d.arts.description})` : ''}</span></div>` : ''}
     </div>
   </div>
 
   <div class="footer">
-    <div><p><strong>Place:</strong> __________________</p><p style="margin-top: 4px;"><strong>Date:</strong> ${appliedDate}</p></div>
-    <div><div class="signature-line">Applicant Signature</div></div>
+    <div><p><strong>Place:</strong> __________________</p><p style="margin-top: 8px;"><strong>Date:</strong> __________________</p></div>
+    <div><div class="signature-line">Candidate Signature</div></div>
   </div>
 
   <div class="system-footer">
-    <span>Generated on ${new Date().toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-    <span>Powered By <span class="brand-connich">Connich</span> Recruit</span>
+    <span>Printed on ${new Date().toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+    <span>Generated by <span class="brand-connich">Connich Recruit</span></span>
   </div>
 </div>`;
 
