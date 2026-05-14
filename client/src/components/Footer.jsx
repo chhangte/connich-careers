@@ -52,29 +52,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Recruiter CTA banner */}
-        <div className="rounded-xl border border-border bg-white p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div>
-              <p className="text-sm font-semibold text-text">Are you an employer?</p>
-              <p className="text-xs text-text-muted">Post jobs, manage applications, and find great talent.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <Link
-              to="/recruiter/login"
-              className="btn-outline text-sm py-2 px-4 no-underline"
-            >
-              Recruiter sign in
-            </Link>
-            <Link
-              to="/recruiter/signup"
-              className="btn-primary text-sm py-2 px-4 no-underline"
-            >
-              Post a job
-            </Link>
-          </div>
-        </div>
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-text-xmuted">© {new Date().getFullYear()} Connich. All rights reserved.</p>

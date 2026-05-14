@@ -81,9 +81,10 @@ const Navbar = ({ user, logout }) => {
             </>
           ) : (
             <>
-              <Link to="/browse-companies" className="btn-ghost text-sm no-underline">Browse Companies</Link>
-              <Link to="/browse" className="btn-ghost text-sm no-underline">Browse Jobs</Link>
-              <Link to="/login" className="btn-ghost text-sm no-underline ml-2">Sign in</Link>
+              <Link to="/browse-companies" className="btn-ghost text-sm no-underline">Companies</Link>
+              <Link to="/browse" className="btn-ghost text-sm no-underline">Jobs</Link>
+              <Link to="/login" className="btn-ghost text-sm no-underline ml-2">Applicant login</Link>
+              <Link to="/recruiter/login" className="btn-ghost text-sm no-underline ml-2">Recruiter login</Link>
               <Link to="/signup" className="btn-primary text-sm no-underline">Get started</Link>
             </>
           )}
@@ -131,7 +132,8 @@ const Navbar = ({ user, logout }) => {
                 </>
               ) : (
                 <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium text-text hover:bg-surface-2 no-underline">Sign in</Link>
+                  <Link to="/login" onClick={() => setMobileOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium text-text hover:bg-surface-2 no-underline">Applicant login</Link>
+                  <Link to="/recruiter/login" onClick={() => setMobileOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium text-text hover:bg-surface-2 no-underline">Recruiter login</Link>
                   <Link to="/signup" onClick={() => setMobileOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium bg-accent text-white no-underline">Get started</Link>
                 </>
               )}
