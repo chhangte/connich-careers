@@ -85,18 +85,18 @@ const Home = () => {
              <div className="glass p-8 sm:p-10 rounded-[2.5rem] shadow-2xl border border-white/50 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -mr-16 -mt-16 blur-3xl" />
                 
-                <h3 className="text-2xl font-bold text-text mb-2">Start your journey</h3>
+                <h3 className="text-2xl font-semibold text-text mb-2">Start your journey</h3>
                 <p className="text-text-muted mb-8 text-sm">No credit card required. Cancel anytime.</p>
 
                 <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                    <div className="grid grid-cols-2 gap-4 mb-6">
                       <label className="flex items-center gap-2 p-3 rounded-xl border-2 border-accent bg-accent/5 cursor-pointer transition-all">
                          <input type="radio" name="role" defaultChecked className="accent-accent" />
-                         <span className="text-sm font-bold text-text">Agency</span>
+                         <span className="text-sm font-semibold text-text">Agency</span>
                       </label>
                       <label className="flex items-center gap-2 p-3 rounded-xl border-2 border-border hover:border-accent/50 cursor-pointer transition-all">
                          <input type="radio" name="role" className="accent-accent" />
-                         <span className="text-sm font-bold text-text">Corporate</span>
+                         <span className="text-sm font-semibold text-text">Corporate</span>
                       </label>
                    </div>
 
@@ -104,7 +104,7 @@ const Home = () => {
                    <input type="email" placeholder="Email Address *" className="input-lg rounded-xl border-border/60 bg-white/50" />
                    <input type="password" placeholder="Create Password *" className="input-lg rounded-xl border-border/60 bg-white/50" />
                    
-                   <button className="w-full btn-primary-lg py-4 rounded-xl text-lg font-bold shadow-lg shadow-accent/20 mt-4">
+                   <button className="w-full btn-primary-lg py-4 rounded-xl text-lg font-semibold shadow-lg shadow-accent/20 mt-4">
                       Get Started Free
                    </button>
 
@@ -142,7 +142,7 @@ const Home = () => {
                 { label: 'Application rates', value: '7X', color: 'text-emerald-500' },
               ].map((stat, i) => (
                 <div key={i} className="glass-dark p-8 rounded-3xl border-white/5 group hover:border-white/20 transition-all">
-                  <div className={`text-5xl font-black mb-4 ${stat.color} group-hover:scale-110 transition-transform origin-left`}>
+                  <div className={`text-5xl font-bold mb-4 ${stat.color} group-hover:scale-110 transition-transform origin-left`}>
                     {stat.value}
                   </div>
                   <div className="text-sm font-medium text-slate-300 leading-snug">
@@ -179,7 +179,7 @@ const Home = () => {
                     <div className={`w-16 h-16 rounded-2xl ${feat.accent} flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500`}>
                        <feat.icon size={32} strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-2xl font-bold text-text mb-4">{feat.title}</h3>
+                    <h3 className="text-2xl font-semibold text-text mb-4">{feat.title}</h3>
                     <p className="text-text-muted leading-relaxed text-base">{feat.desc}</p>
                     <div className="mt-8 pt-8 border-t border-border/40 opacity-0 group-hover:opacity-100 transition-opacity">
                        <span className="text-accent font-bold text-sm flex items-center gap-2">
@@ -225,10 +225,10 @@ const Home = () => {
                  { name: 'Jira', icon: 'J', color: 'text-blue-500' },
                ].map((brand, i) => (
                  <div key={i} className="aspect-square bg-white border border-border/60 rounded-[2rem] flex flex-col items-center justify-center gap-4 hover:border-accent hover:shadow-xl transition-all duration-300 group">
-                    <div className={`text-3xl font-black ${brand.color} group-hover:scale-125 transition-transform`}>
+                    <div className={`text-3xl font-bold ${brand.color} group-hover:scale-125 transition-transform`}>
                        {brand.icon}
                     </div>
-                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-text-xmuted">{brand.name}</span>
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-text-xmuted">{brand.name}</span>
                  </div>
                ))}
             </div>
@@ -267,10 +267,10 @@ const Home = () => {
                     with our ATS
                   </h2>
                   <div className="flex flex-wrap justify-center gap-4">
-                     <Link to="/signup" className="px-10 py-5 bg-white text-accent rounded-2xl font-bold text-lg hover:scale-105 transition-all shadow-xl">
+                     <Link to="/signup" className="px-10 py-5 bg-white text-accent rounded-2xl font-semibold text-lg hover:scale-105 transition-all shadow-xl">
                         Get Started
                      </Link>
-                     <button className="px-10 py-5 bg-accent-hover text-white border border-white/20 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all">
+                     <button className="px-10 py-5 bg-accent-hover text-white border border-white/20 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all">
                         Register for a demo
                      </button>
                   </div>

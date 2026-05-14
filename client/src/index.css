@@ -92,7 +92,7 @@ body { margin: 0; background: #ffffff; }
 
   .btn-primary-lg {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg
-           text-base font-semibold bg-accent text-white shadow-sm
+           text-base font-medium bg-accent text-white shadow-sm
            hover:bg-accent-hover transition-all duration-150 cursor-pointer select-none;
   }
 
@@ -274,11 +274,11 @@ body { margin: 0; background: #ffffff; }
 }
 
 .heading-hero {
-  @apply text-5xl sm:text-7xl font-extrabold tracking-tighter leading-[0.95];
+  @apply text-5xl sm:text-7xl font-bold tracking-tighter leading-[0.95];
 }
 
 .heading-section {
-  @apply text-3xl sm:text-5xl font-bold tracking-tight leading-tight;
+  @apply text-3xl sm:text-5xl font-semibold tracking-tight leading-tight;
 }
 
 /* ─────────────────────────────────────────────
