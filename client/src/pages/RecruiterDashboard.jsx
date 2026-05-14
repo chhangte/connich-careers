@@ -5,6 +5,7 @@ import {
   AlertCircle, ChevronRight, Trash2, Mail
 } from 'lucide-react';
 import axios from 'axios';
+import html2pdf from 'html2pdf.js';
 
 const API = '/api';
 
@@ -440,7 +441,7 @@ const StatusDropdown = ({ appId, current, onChange }) => {
 };
 
 /* ── Bio-Data PDF Generator ─────────────────── */
-const generateBioData = (app, jobTitle, companyName) => {
+const generateBioData = async (app, jobTitle, companyName) => {
   if (!app) return;
 
   try {
@@ -452,176 +453,37 @@ const generateBioData = (app, jobTitle, companyName) => {
       : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
     const appId = String(app._id || '').slice(-8).toUpperCase();
-
-    // Helper to handle empty/null values in template
     const val = (v, fallback = '—') => v || fallback;
 
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Bio-Data — ${name}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    const htmlContent = `
+<div style="font-family: 'Inter', sans-serif; font-size: 10pt; color: #0f172a; line-height: 1.5; padding: 20mm; background: white;">
   <style>
-    :root {
-      --primary: #0f172a;
-      --accent: #2563eb;
-      --border: #e2e8f0;
-      --bg-light: #f8fafc;
-      --text-muted: #64748b;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { 
-      font-family: 'Inter', sans-serif; 
-      font-size: 10pt; 
-      color: #0f172a; 
-      line-height: 1.5;
-      padding: 15mm;
-    }
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid var(--primary);
-    }
-    .header-info h1 {
-      font-size: 22pt;
-      font-weight: 800;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
-    }
-    .header-info .job-title {
-      font-size: 12pt;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .header-info .meta {
-      font-size: 9pt;
-      color: var(--text-muted);
-    }
-    .photo-placeholder {
-      width: 100px;
-      height: 120px;
-      border: 1px dashed var(--border);
-      background: var(--bg-light);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 8pt;
-      color: var(--text-muted);
-      border-radius: 4px;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #0f172a; }
+    .header-info h1 { font-size: 22pt; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .header-info .job-title { font-size: 12pt; font-weight: 600; color: #2563eb; margin-bottom: 8px; }
+    .header-info .meta { font-size: 9pt; color: #64748b; }
+    .photo-placeholder { width: 100px; height: 120px; border: 1px dashed #e2e8f0; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 8pt; color: #64748b; border-radius: 4px; }
     .section { margin-bottom: 24px; }
-    .section-title {
-      font-size: 10pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--primary);
-      margin-bottom: 12px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px 24px;
-    }
-    .data-item {
-      display: flex;
-      flex-direction: column;
-    }
-    .data-label {
-      font-size: 8pt;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-    .data-value {
-      font-size: 10pt;
-      font-weight: 500;
-    }
-
+    .section-title { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #0f172a; margin-bottom: 12px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 24px; }
+    .data-item { display: flex; flex-direction: column; }
+    .data-label { font-size: 8pt; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .data-value { font-size: 10pt; font-weight: 500; }
     .full-width { grid-column: span 2; }
-
-    .education-item, .experience-item {
-      margin-bottom: 12px;
-      padding: 10px;
-      background: var(--bg-light);
-      border-radius: 6px;
-    }
-    .item-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
+    .education-item, .experience-item { margin-bottom: 12px; padding: 10px; background: #f8fafc; border-radius: 6px; }
+    .item-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
     .item-title { font-weight: 700; font-size: 10.5pt; }
-    .item-subtitle { font-weight: 500; color: var(--accent); font-size: 9.5pt; }
-    .item-meta { font-size: 9pt; color: var(--text-muted); }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-    .badge {
-      background: #eff6ff;
-      color: #2563eb;
-      font-size: 8pt;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-
-    .footer {
-      margin-top: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      font-size: 9pt;
-    }
-    .signature-line {
-      width: 180px;
-      border-top: 1px solid var(--primary);
-      text-align: center;
-      padding-top: 6px;
-      font-weight: 600;
-    }
-
-    .system-footer {
-      margin-top: 60px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      font-size: 8pt;
-      color: var(--text-muted);
-    }
-    .brand-connich { font-weight: 700; color: var(--primary); }
-
-    @media print {
-      body { padding: 0; }
-      .photo-placeholder { -webkit-print-color-adjust: exact; background-color: var(--bg-light) !important; }
-      .education-item, .experience-item { -webkit-print-color-adjust: exact; background-color: var(--bg-light) !important; }
-    }
+    .item-subtitle { font-weight: 500; color: #2563eb; font-size: 9.5pt; }
+    .item-meta { font-size: 9pt; color: #64748b; }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .badge { background: #eff6ff; color: #2563eb; font-size: 8pt; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+    .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 9pt; }
+    .signature-line { width: 180px; border-top: 1px solid #0f172a; text-align: center; padding-top: 6px; font-weight: 600; }
+    .system-footer { margin-top: 60px; padding-top: 8px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 8pt; color: #64748b; }
+    .brand-connich { font-weight: 700; color: #0f172a; }
   </style>
-</head>
-<body>
+
   <div class="page-header">
     <div class="header-info">
       <div class="meta">Candidate's Bio-Data Sheet - ${val(companyName, 'Connich Recruit')}</div>
@@ -629,135 +491,51 @@ const generateBioData = (app, jobTitle, companyName) => {
       <div class="job-title">Position: ${val(jobTitle)}</div>
       <div class="meta">Applied on ${appliedDate} · ID: ${appId}</div>
     </div>
-    <div class="photo-placeholder">
-      Candidate Photo
-    </div>
+    <div class="photo-placeholder">Candidate Photo</div>
   </div>
 
   <div class="section">
     <h2 class="section-title">Personal Information</h2>
     <div class="grid">
-      <div class="data-item">
-        <span class="data-label">Full Name</span>
-        <span class="data-value">${val(name)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Email Address</span>
-        <span class="data-value">${val(email)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Phone Number</span>
-        <span class="data-value">${val(d.phone)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Date of Birth</span>
-        <span class="data-value">${val(d.dob)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Gender</span>
-        <span class="data-value">${val(d.gender)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Marital Status</span>
-        <span class="data-value">${val(d.maritalStatus)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Nationality</span>
-        <span class="data-value">${val(d.nationality)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Category</span>
-        <span class="data-value">${val(d.category)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Religion</span>
-        <span class="data-value">${val(d.religion)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Ethnicity</span>
-        <span class="data-value">${val(d.ethnicity)}</span>
-      </div>
-      <div class="data-item full-width">
-        <span class="data-label">Permanent Address</span>
-        <span class="data-value">${val(d.address)}</span>
-      </div>
+      <div class="data-item"><span class="data-label">Full Name</span><span class="data-value">${val(name)}</span></div>
+      <div class="data-item"><span class="data-label">Email Address</span><span class="data-value">${val(email)}</span></div>
+      <div class="data-item"><span class="data-label">Phone Number</span><span class="data-value">${val(d.phone)}</span></div>
+      <div class="data-item"><span class="data-label">Date of Birth</span><span class="data-value">${val(d.dob)}</span></div>
+      <div class="data-item"><span class="data-label">Gender</span><span class="data-value">${val(d.gender)}</span></div>
+      <div class="data-item"><span class="data-label">Marital Status</span><span class="data-value">${val(d.maritalStatus)}</span></div>
+      <div class="data-item"><span class="data-label">Nationality</span><span class="data-value">${val(d.nationality)}</span></div>
+      <div class="data-item"><span class="data-label">Category</span><span class="data-value">${val(d.category)}</span></div>
+      <div class="data-item"><span class="data-label">Religion</span><span class="data-value">${val(d.religion)}</span></div>
+      <div class="data-item"><span class="data-label">Ethnicity</span><span class="data-value">${val(d.ethnicity)}</span></div>
+      <div class="data-item full-width"><span class="data-label">Permanent Address</span><span class="data-value">${val(d.address)}</span></div>
     </div>
   </div>
 
   <div class="section">
     <h2 class="section-title">Family Information</h2>
     <div class="grid">
-      <div class="data-item">
-        <span class="data-label">Father's Name</span>
-        <span class="data-value">${val(d.fatherName)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Father's Contact</span>
-        <span class="data-value">${val(d.fatherPhone)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Mother's Name</span>
-        <span class="data-value">${val(d.motherName)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Mother's Contact</span>
-        <span class="data-value">${val(d.motherPhone)}</span>
-      </div>
+      <div class="data-item"><span class="data-label">Father's Name</span><span class="data-value">${val(d.fatherName)}</span></div>
+      <div class="data-item"><span class="data-label">Father's Contact</span><span class="data-value">${val(d.fatherPhone)}</span></div>
+      <div class="data-item"><span class="data-label">Mother's Name</span><span class="data-value">${val(d.motherName)}</span></div>
+      <div class="data-item"><span class="data-label">Mother's Contact</span><span class="data-value">${val(d.motherPhone)}</span></div>
     </div>
   </div>
 
   <div class="section">
     <h2 class="section-title">Educational Background</h2>
-    
     ${Array.isArray(d.postgraduates) && d.postgraduates.length > 0 ? d.postgraduates.filter(pg => pg.institute || pg.course).map(pg => `
       <div class="education-item">
-        <div class="item-header">
-          <span class="item-title">${pg.institute}</span>
-          <span class="item-meta">Postgraduate</span>
-        </div>
+        <div class="item-header"><span class="item-title">${pg.institute}</span><span class="item-meta">Postgraduate</span></div>
         <div class="item-subtitle">${pg.course}</div>
       </div>
     `).join('') : ''}
-
-    ${d.undergraduateInstitute ? `
-      <div class="education-item">
-        <div class="item-header">
-          <span class="item-title">${d.undergraduateInstitute}</span>
-          <span class="item-meta">Undergraduate</span>
-        </div>
-        <div class="item-subtitle">${d.ugCourse || 'Bachelors'}</div>
-      </div>
-    ` : ''}
-
-    ${d.diplomaInstitute ? `
-      <div class="education-item">
-        <div class="item-header">
-          <span class="item-title">${d.diplomaInstitute}</span>
-          <span class="item-meta">Diploma</span>
-        </div>
-        <div class="item-subtitle">${d.diplomaCourse}</div>
-      </div>
-    ` : ''}
-
+    ${d.undergraduateInstitute ? `<div class="education-item"><div class="item-header"><span class="item-title">${d.undergraduateInstitute}</span><span class="item-meta">Undergraduate</span></div><div class="item-subtitle">${d.ugCourse || 'Bachelors'}</div></div>` : ''}
+    ${d.diplomaInstitute ? `<div class="education-item"><div class="item-header"><span class="item-title">${d.diplomaInstitute}</span><span class="item-meta">Diploma</span></div><div class="item-subtitle">${d.diplomaCourse}</div></div>` : ''}
     <div class="grid" style="margin-top: 10px;">
-      ${d.higherSecondarySchool ? `
-        <div class="data-item">
-          <span class="data-label">Hr. Secondary School</span>
-          <span class="data-value">${d.higherSecondarySchool} ${d.hscStream ? `(${d.hscStream})` : ''}</span>
-        </div>
-      ` : ''}
-      <div class="data-item">
-        <span class="data-label">High School (Class 10)</span>
-        <span class="data-value">${val(d.highSchool)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Middle School</span>
-        <span class="data-value">${val(d.middleSchool)}</span>
-      </div>
-      <div class="data-item">
-        <span class="data-label">Primary School</span>
-        <span class="data-value">${val(d.primarySchool)}</span>
-      </div>
+      ${d.higherSecondarySchool ? `<div class="data-item"><span class="data-label">Hr. Secondary School</span><span class="data-value">${d.higherSecondarySchool} ${d.hscStream ? `(${d.hscStream})` : ''}</span></div>` : ''}
+      <div class="data-item"><span class="data-label">High School (Class 10)</span><span class="data-value">${val(d.highSchool)}</span></div>
+      <div class="data-item"><span class="data-label">Middle School</span><span class="data-value">${val(d.middleSchool)}</span></div>
+      <div class="data-item"><span class="data-label">Primary School</span><span class="data-value">${val(d.primarySchool)}</span></div>
     </div>
   </div>
 
@@ -766,17 +544,9 @@ const generateBioData = (app, jobTitle, companyName) => {
       <h2 class="section-title">Work Experience</h2>
       ${d.experiences.filter(exp => exp.jobTitle).map(exp => `
         <div class="experience-item">
-          <div class="item-header">
-            <span class="item-title">${exp.jobTitle}</span>
-            <span class="item-meta">${exp.fromMonth} ${exp.fromYear} — ${exp.toMonth} ${exp.toYear}</span>
-          </div>
+          <div class="item-header"><span class="item-title">${exp.jobTitle}</span><span class="item-meta">${exp.fromMonth} ${exp.fromYear} — ${exp.toMonth} ${exp.toYear}</span></div>
           <div class="data-value" style="font-size: 9pt; margin-top: 4px;">${val(exp.description)}</div>
-          ${exp.referenceName ? `
-            <div style="margin-top: 8px; border-top: 1px solid #eee; padding-top: 4px;">
-              <span class="data-label" style="font-size: 7pt;">Reference:</span>
-              <span class="data-value" style="font-size: 8pt;">${exp.referenceName} (${exp.referencePhone})</span>
-            </div>
-          ` : ''}
+          ${exp.referenceName ? `<div style="margin-top: 8px; border-top: 1px solid #eee; padding-top: 4px;"><span class="data-label" style="font-size: 7pt;">Reference:</span><span class="data-value" style="font-size: 8pt;">${exp.referenceName} (${exp.referencePhone})</span></div>` : ''}
         </div>
       `).join('')}
     </div>
@@ -787,62 +557,43 @@ const generateBioData = (app, jobTitle, companyName) => {
     <div class="grid">
       <div class="data-item full-width">
         <span class="data-label">Languages Known</span>
-        <div class="badges">
-          ${Array.isArray(d.languages) && d.languages.filter(l => l.name).length > 0 ? d.languages.filter(l => l.name).map(l => `<span class="badge">${l.name} (${l.proficiency})</span>`).join('') : '<span class="data-value">—</span>'}
-        </div>
+        <div class="badges">${Array.isArray(d.languages) && d.languages.filter(l => l.name).length > 0 ? d.languages.filter(l => l.name).map(l => `<span class="badge">${l.name} (${l.proficiency})</span>`).join('') : '<span class="data-value">—</span>'}</div>
       </div>
-      ${d.sports?.name ? `
-        <div class="data-item">
-          <span class="data-label">Sports</span>
-          <span class="data-value">${d.sports.name} ${d.sports.description ? `(${d.sports.description})` : ''}</span>
-        </div>
-      ` : ''}
-      ${d.music?.name ? `
-        <div class="data-item">
-          <span class="data-label">Music</span>
-          <span class="data-value">${d.music.name} ${d.music.description ? `(${d.music.description})` : ''}</span>
-        </div>
-      ` : ''}
-      ${d.arts?.name ? `
-        <div class="data-item">
-          <span class="data-label">Fine/Performing Arts</span>
-          <span class="data-value">${d.arts.name} ${d.arts.description ? `(${d.arts.description})` : ''}</span>
-        </div>
-      ` : ''}
+      ${d.sports?.name ? `<div class="data-item"><span class="data-label">Sports</span><span class="data-value">${d.sports.name} ${d.sports.description ? `(${d.sports.description})` : ''}</span></div>` : ''}
+      ${d.music?.name ? `<div class="data-item"><span class="data-label">Music</span><span class="data-value">${d.music.name} ${d.music.description ? `(${d.music.description})` : ''}</span></div>` : ''}
+      ${d.arts?.name ? `<div class="data-item"><span class="data-label">Fine/Performing Arts</span><span class="data-value">${d.arts.name} ${d.arts.description ? `(${d.arts.description})` : ''}</span></div>` : ''}
     </div>
   </div>
 
   <div class="footer">
-    <div>
-      <p><strong>Place:</strong> __________________</p>
-      <p style="margin-top: 4px;"><strong>Date:</strong> ${appliedDate}</p>
-    </div>
-    <div>
-      <div class="signature-line">Applicant Signature</div>
-    </div>
+    <div><p><strong>Place:</strong> __________________</p><p style="margin-top: 4px;"><strong>Date:</strong> ${appliedDate}</p></div>
+    <div><div class="signature-line">Applicant Signature</div></div>
   </div>
 
   <div class="system-footer">
     <span>Generated on ${new Date().toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
     <span>Powered By <span class="brand-connich">Connich</span> Recruit</span>
   </div>
-</body>
-</html>`;
+</div>`;
 
-    const win = window.open('', '_blank', 'width=900,height=1000');
-    if (!win) {
-      alert('Popup blocked! Please allow popups for this site to download the Bio-Data sheet.');
-      return;
-    }
-    win.document.write(html);
-    win.document.close();
-    win.focus();
-    setTimeout(() => { 
-      if (!win.closed) win.print(); 
-    }, 800);
+    const element = document.createElement('div');
+    element.innerHTML = htmlContent;
+    document.body.appendChild(element);
+
+    const opt = {
+      margin: 10,
+      filename: `BioData_${name.replace(/\s+/g, '_')}_${appId}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    await html2pdf().from(element).set(opt).save();
+    document.body.removeChild(element);
+    
   } catch (err) {
     console.error('Error generating Bio-Data PDF:', err);
-    alert('An error occurred while generating the Bio-Data sheet. Please check the console for details.');
+    alert('An error occurred while generating the PDF. Please try again.');
   }
 };
 
@@ -850,12 +601,19 @@ const generateBioData = (app, jobTitle, companyName) => {
 const ViewApplicantModal = ({ app, jobTitle, companyName, onClose }) => {
   const [msg, setMsg] = useState('');
   const [sendingMsg, setSendingMsg] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   if (!app) return null;
   const d = app.details || {};
   const name = d.name || app.applicant?.name || '—';
   const qualSummary = [d.highestQualification, d.discipline].filter(Boolean).join(' · ') || '—';
   const status = STATUS_MAP[app.status] || STATUS_MAP.PENDING;
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    await generateBioData(app, jobTitle, companyName);
+    setDownloading(false);
+  };
 
   const Row = ({ label, value }) => (
     <div className="flex gap-3 py-2.5 border-b border-border last:border-0">
@@ -889,11 +647,13 @@ const ViewApplicantModal = ({ app, jobTitle, companyName, onClose }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => generateBioData(app, jobTitle, companyName)}
+              onClick={handleDownload}
+              disabled={downloading}
               className="btn-outline py-1.5 px-3 text-xs flex items-center gap-1.5"
               title="Download Bio-Data Sheet"
             >
-              <Printer size={13} /> Download
+              {downloading ? <Loader2 size={13} className="animate-spin" /> : <Printer size={13} />}
+              {downloading ? 'Preparing...' : 'Download'}
             </button>
             <button onClick={onClose} className="btn-ghost p-1.5 rounded-md">
               <X size={18} />
@@ -1123,10 +883,12 @@ const ViewApplicantModal = ({ app, jobTitle, companyName, onClose }) => {
         {/* Footer */}
         <div className="px-6 py-4 border-t border-border shrink-0 flex gap-3">
           <button
-            onClick={() => generateBioData(app, jobTitle, companyName)}
+            onClick={handleDownload}
+            disabled={downloading}
             className="btn-primary flex-1 justify-center"
           >
-            <Printer size={15} /> Download Bio-Data Sheet
+            {downloading ? <Loader2 size={15} className="animate-spin" /> : <Printer size={15} />}
+            {downloading ? 'Generating Bio-Data Sheet...' : 'Download Bio-Data Sheet'}
           </button>
           <button onClick={onClose} className="btn-outline">Close</button>
         </div>
@@ -1324,6 +1086,7 @@ const RecruiterDashboard = ({ user, setUser }) => {
   const [jobToDelete, setJobToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [viewApp, setViewApp] = useState(null); // applicant detail panel
+  const [downloadingId, setDownloadingId] = useState(null);
   const statusFilterRef = useRef(null);
 
   /* Close status filter on outside click */
@@ -1711,11 +1474,16 @@ const RecruiterDashboard = ({ user, setUser }) => {
                                       <FileText size={14} />
                                     </button>
                                     <button
-                                      onClick={() => generateBioData(app, activeJob?.title, user?.company?.name)}
-                                      className="btn-ghost p-2 text-text-muted hover:text-accent"
+                                      onClick={async () => {
+                                        setDownloadingId(app._id);
+                                        await generateBioData(app, activeJob?.title, user?.company?.name);
+                                        setDownloadingId(null);
+                                      }}
+                                      disabled={downloadingId === app._id}
+                                      className="btn-ghost p-2 text-text-muted hover:text-accent disabled:opacity-50"
                                       title="Download Bio-Data Sheet"
                                     >
-                                      <Printer size={14} />
+                                      {downloadingId === app._id ? <Loader2 size={14} className="animate-spin" /> : <Printer size={14} />}
                                     </button>
                                     <button className="btn-ghost p-2 text-text-muted">
                                       <MoreVertical size={14} />
@@ -1760,8 +1528,17 @@ const RecruiterDashboard = ({ user, setUser }) => {
                                 <button onClick={() => setViewApp(app)} className="btn-ghost p-1.5" title="View">
                                   <FileText size={14} />
                                 </button>
-                                <button onClick={() => generateBioData(app, activeJob?.title, user?.company?.name)} className="btn-ghost p-1.5" title="Download">
-                                  <Printer size={14} />
+                                <button
+                                  onClick={async () => {
+                                    setDownloadingId(app._id);
+                                    await generateBioData(app, activeJob?.title, user?.company?.name);
+                                    setDownloadingId(null);
+                                  }}
+                                  disabled={downloadingId === app._id}
+                                  className="btn-ghost p-1.5 disabled:opacity-50"
+                                  title="Download"
+                                >
+                                  {downloadingId === app._id ? <Loader2 size={14} className="animate-spin" /> : <Printer size={14} />}
                                 </button>
                               </div>
                             </div>
