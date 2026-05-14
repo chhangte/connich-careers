@@ -340,7 +340,7 @@ const CompanyJobDetail = () => {
                 ) : (
                   <button
                     onClick={handleApply}
-                    className="w-full flex items-center justify-center gap-2 text-sm font-bold py-3.5 rounded-xl text-white transition-all hover:opacity-90 shadow-sm"
+                    className="btn-primary w-full py-2.5 rounded-xl text-sm font-bold shadow-sm"
                     style={{ backgroundColor: primary }}
                   >
                     Apply for this role

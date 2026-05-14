@@ -24,6 +24,11 @@ const ApplicationSchema = new mongoose.Schema({
         country: String,
         pin: String,
         dob: String,
+        gender: String,
+        nationality: String,
+        ethnicity: String,
+        religion: String,
+        category: String,
         maritalStatus: String,
         // Family
         fatherName: String,
@@ -40,8 +45,14 @@ const ApplicationSchema = new mongoose.Schema({
         hscStream: String,
         undergraduateInstitute: String,
         ugCourse: String,
+        diplomaInstitute: String,
+        diplomaCourse: String,
         postgraduateInstitute: String,
         pgCourse: String,
+        postgraduates: [{
+            institute: String,
+            course: String
+        }],
         // Experience
         isFresher: { type: Boolean, default: false },
         experiences: [{
@@ -54,6 +65,14 @@ const ApplicationSchema = new mongoose.Schema({
             referenceName: String,
             referencePhone: String
         }],
+        // Skills & Extra
+        languages: [{
+            name: String,
+            proficiency: String
+        }],
+        sports: { name: String, description: String },
+        music: { name: String, description: String },
+        arts: { name: String, description: String },
     },
     status: {
         type: String,

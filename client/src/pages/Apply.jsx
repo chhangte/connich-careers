@@ -841,7 +841,7 @@ const Apply = ({ user }) => {
                   <button
                     type="button"
                     onClick={addExperience}
-                    className="w-full py-4 flex items-center justify-center gap-2 border-2 border-dashed border-border hover:border-accent hover:bg-accent-light text-text-muted hover:text-accent rounded-xl transition-all font-medium group"
+                    className="w-full py-3 flex items-center justify-center gap-2 border-2 border-dashed border-border hover:border-accent hover:bg-accent-light text-text-muted hover:text-accent rounded-xl transition-all font-medium group"
                   >
                     <Plus size={20} className="group-hover:scale-110 transition-transform" />
                     Add another work experience

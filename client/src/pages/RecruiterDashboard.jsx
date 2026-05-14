@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Plus, Users, FileText, Printer, MoreVertical,
   Search, ChevronDown, X, Loader2, CheckCircle2,
-  AlertCircle, ChevronRight, Trash2
+  AlertCircle, ChevronRight, Trash2, Mail
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -440,153 +440,377 @@ const StatusDropdown = ({ appId, current, onChange }) => {
 };
 
 /* ── Bio-Data PDF Generator ─────────────────── */
+/* ── Bio-Data PDF Generator ─────────────────── */
 const generateBioData = (app, jobTitle) => {
   const d = app.details || {};
-  const name = d.name || app.applicant?.name || '';
-  const qual = [d.highestQualification, d.discipline].filter(Boolean).join(' ');
+  const name = d.name || app.applicant?.name || 'Applicant Name';
+  const email = d.email || app.applicant?.email || '';
   const appliedDate = app.appliedAt
     ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })
-    : '';
-
-  const field = (label, value, style = '') =>
-    `<div class="field-row" style="${style}">
-      <span class="label">${label}</span>
-      <span class="line">&nbsp;${value || ''}</span>
-    </div>`;
-
-  const halfField = (label, value) =>
-    `<div class="half-field">
-      <span class="label">${label}</span>
-      <span class="line">&nbsp;${value || ''}</span>
-    </div>`;
+    : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
 
   const html = `<!DOCTYPE html>
-<html><head>
-<meta charset="UTF-8">
-<title>Bio-Data — ${name}</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Times New Roman', Times, serif; font-size: 11.5pt; color: #000;
-         padding: 18mm 20mm 15mm 20mm; }
-  .header { text-align: center; position: relative; margin-bottom: 22px; }
-  .photo-box { position: absolute; top: 0; right: 0; width: 88px; height: 112px;
-               border: 1.5px solid #000; display: flex; flex-direction: column;
-               align-items: center; justify-content: center;
-               text-align: center; font-size: 8.5pt; padding: 6px; line-height: 1.5; }
-  h1 { font-size: 18pt; font-weight: bold; letter-spacing: 1.5px; margin-bottom: 6px; }
-  h2 { font-size: 12pt; font-weight: bold; letter-spacing: 3px; margin-bottom: 4px; }
-  .subtitle { font-size: 10pt; color: #333; margin-bottom: 24px; }
-  .field-row { display: flex; align-items: flex-end; margin-bottom: 13px; width: 100%; }
-  .label { white-space: nowrap; font-size: 11pt; }
-  .line { flex: 1; border-bottom: 1px solid #000; min-width: 60px; padding-bottom: 1px; }
-  .two-col { display: flex; gap: 24px; margin-bottom: 13px; }
-  .half-field { display: flex; align-items: flex-end; flex: 1; }
-  .half-field .line { flex: 1; border-bottom: 1px solid #000; padding-bottom: 1px; }
-  .half-field .label { white-space: nowrap; font-size: 11pt; margin-right: 4px; }
-  .divider { border-top: 1px solid #333; margin: 14px 0; }
-  .exp-label { font-size: 11pt; margin-bottom: 8px; }
-  .exp-line { border-bottom: 1px solid #000; height: 20px; margin-bottom: 9px; font-size: 10pt; padding: 0 4px 2px; }
-  .footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 32px; }
-  .footer-col .field-row { margin-bottom: 12px; }
-  @media print { body { padding: 12mm 18mm 10mm 18mm; } @page { margin: 0; } }
-</style>
-</head><body>
-  <div class="header">
-    <div class="photo-box">Paste<br>photograph<br>here<br>(3.5 x 4.5)</div>
-    <h1>CONNICH</h1>
-    <h2>CANDIDATE'S BIO-DATA SHEET</h2>
-    <div class="subtitle">Connich Education Technology</div>
-  </div>
-
-  ${field('Application for :', jobTitle)}
-  ${field('Name :', name)}
-
-  <div class="two-col">
-    ${halfField('Date of Birth &amp; Age :', d.dob)}
-    ${halfField('Qualification(s) :', qual)}
-  </div>
-  <div class="two-col">
-    ${halfField('Phone :', d.phone)}
-    ${halfField('Marital Status :', d.maritalStatus)}
-  </div>
-  <div class="two-col">
-    ${halfField('Gender :', d.gender)}
-    ${halfField('Nationality :', d.nationality)}
-  </div>
-  <div class="two-col">
-    ${halfField('Religion :', d.religion)}
-    ${halfField('Ethnicity :', d.ethnicity)}
-  </div>
-  <div class="two-col">
-    ${halfField('Category :', d.category)}
-    ${halfField('Address :', d.address)}
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="two-col">
-    ${halfField("Father's Name :", d.fatherName)}
-    ${halfField('Phone :', d.fatherPhone)}
-  </div>
-  <div class="two-col">
-    ${halfField("Mother's Name :", d.motherName)}
-    ${halfField('Phone :', d.motherPhone)}
-  </div>
-
-  ${field('Primary School attended :', d.primarySchool)}
-  ${field('Middle School attended :', d.middleSchool)}
-  ${field('High School attended :', d.highSchool)}
-  ${field('Hr. Sec. School attended :', d.higherSecondarySchool)}
-  ${field('Under Graduate Inst. attended :', d.undergraduateInstitute)}
-
-  <div class="divider"></div>
-
-  ${Array.isArray(d.postgraduates) && d.postgraduates.length > 0
-      ? d.postgraduates.map((pg, i) => field(`Post Graduate Inst. #${i + 1} :`, `${pg.institute} (${pg.course})`)).join('')
-      : field('Post Graduate Inst. attended :', d.postgraduateInstitute)
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bio-Data — ${name}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --border: #e2e8f0;
+      --bg-light: #f8fafc;
+      --text-muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Inter', sans-serif; 
+      font-size: 10pt; 
+      color: #0f172a; 
+      line-height: 1.5;
+      padding: 15mm;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--primary);
+    }
+    .header-info h1 {
+      font-size: 22pt;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .header-info .job-title {
+      font-size: 12pt;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .header-info .meta {
+      font-size: 9pt;
+      color: var(--text-muted);
+    }
+    .photo-placeholder {
+      width: 100px;
+      height: 120px;
+      border: 1px dashed var(--border);
+      background: var(--bg-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 8pt;
+      color: var(--text-muted);
+      border-radius: 4px;
     }
 
-  ${Array.isArray(d.languages) && d.languages.length > 0
-      ? field('Languages Known :', d.languages.map(l => `${l.name} (${l.proficiency})`).join(', '))
-      : ''
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-size: 10pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 12px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 24px;
+    }
+    .data-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .data-label {
+      font-size: 8pt;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .data-value {
+      font-size: 10pt;
+      font-weight: 500;
     }
 
-  <div class="divider"></div>
+    .full-width { grid-column: span 2; }
 
-  ${d.sports?.name ? field('Sports Interest :', `${d.sports.name}${d.sports.description ? ` - ${d.sports.description}` : ''}`) : ''}
-  ${d.music?.name ? field('Music Instruments :', `${d.music.name}${d.music.description ? ` - ${d.music.description}` : ''}`) : ''}
-  ${d.arts?.name ? field('Fine/Performing Art :', `${d.arts.name}${d.arts.description ? ` - ${d.arts.description}` : ''}`) : ''}
+    .education-item, .experience-item {
+      margin-bottom: 12px;
+      padding: 10px;
+      background: var(--bg-light);
+      border-radius: 6px;
+    }
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .item-title { font-weight: 700; font-size: 10.5pt; }
+    .item-subtitle { font-weight: 500; color: var(--accent); font-size: 9.5pt; }
+    .item-meta { font-size: 9pt; color: var(--text-muted); }
 
-  <div class="divider"></div>
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .badge {
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 8pt;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
 
-  <div class="exp-label">Experience (if any) :</div>
-  <div class="exp-line">${d.experience || ''}</div>
-  <div class="exp-line"></div>
-  ${d.referenceeName ? `<div class="two-col" style="margin-top:6px">
-    ${halfField('Reference :', d.referenceeName)}
-    ${halfField('Phone :', d.referencePhone)}
-  </div>` : '<div class="exp-line"></div>'}
+    .footer {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9pt;
+    }
+    .signature-line {
+      width: 180px;
+      border-top: 1px solid var(--primary);
+      text-align: center;
+      padding-top: 6px;
+      font-weight: 600;
+    }
 
-  <div class="footer">
-    <div class="footer-col">
-      <div class="field-row">
-        <span class="label">Date :</span>
-        <span class="line" style="min-width:130px">&nbsp;${appliedDate}</span>
+    @media print {
+      body { padding: 0; }
+      .photo-placeholder { -webkit-print-color-adjust: exact; background-color: var(--bg-light) !important; }
+      .education-item, .experience-item { -webkit-print-color-adjust: exact; background-color: var(--bg-light) !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-header">
+    <div class="header-info">
+      <div class="meta">Bio-Data Sheet · Connich Careers</div>
+      <h1>${name}</h1>
+      <div class="job-title">${jobTitle}</div>
+      <div class="meta">Applied on ${appliedDate} · ID: ${app._id.slice(-8).toUpperCase()}</div>
+    </div>
+    <div class="photo-placeholder">
+      Candidate Photo
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Personal Information</h2>
+    <div class="grid">
+      <div class="data-item">
+        <span class="data-label">Full Name</span>
+        <span class="data-value">${name}</span>
       </div>
-      <div class="field-row">
-        <span class="label">Place :</span>
-        <span class="line" style="min-width:130px"></span>
+      <div class="data-item">
+        <span class="data-label">Email Address</span>
+        <span class="data-value">${email}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Phone Number</span>
+        <span class="data-value">${d.phone || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Date of Birth</span>
+        <span class="data-value">${d.dob || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Gender</span>
+        <span class="data-value">${d.gender || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Marital Status</span>
+        <span class="data-value">${d.maritalStatus || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Nationality</span>
+        <span class="data-value">${d.nationality || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Category</span>
+        <span class="data-value">${d.category || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Religion</span>
+        <span class="data-value">${d.religion || '—'}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Ethnicity</span>
+        <span class="data-value">${d.ethnicity || '—'}</span>
+      </div>
+      <div class="data-item full-width">
+        <span class="data-label">Permanent Address</span>
+        <span class="data-value">${d.address || '—'}</span>
       </div>
     </div>
-    <span style="font-size:11pt">Signature</span>
   </div>
-</body></html>`;
 
-  const win = window.open('', '_blank', 'width=800,height=900');
+  <div class="section">
+    <h2 class="section-title">Family Information</h2>
+    <div class="grid">
+      <div class="data-item">
+        <span class="data-label">Father's Name</span>
+        <span class="data-value">${d.fatherName}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Father's Contact</span>
+        <span class="data-value">${d.fatherPhone}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Mother's Name</span>
+        <span class="data-value">${d.motherName}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Mother's Contact</span>
+        <span class="data-value">${d.motherPhone}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Educational Background</h2>
+    
+    ${d.postgraduates?.length > 0 ? d.postgraduates.map(pg => `
+      <div class="education-item">
+        <div class="item-header">
+          <span class="item-title">${pg.institute}</span>
+          <span class="item-meta">Postgraduate</span>
+        </div>
+        <div class="item-subtitle">${pg.course}</div>
+      </div>
+    `).join('') : ''}
+
+    ${d.undergraduateInstitute ? `
+      <div class="education-item">
+        <div class="item-header">
+          <span class="item-title">${d.undergraduateInstitute}</span>
+          <span class="item-meta">Undergraduate</span>
+        </div>
+        <div class="item-subtitle">${d.ugCourse || 'Bachelors'}</div>
+      </div>
+    ` : ''}
+
+    ${d.diplomaInstitute ? `
+      <div class="education-item">
+        <div class="item-header">
+          <span class="item-title">${d.diplomaInstitute}</span>
+          <span class="item-meta">Diploma</span>
+        </div>
+        <div class="item-subtitle">${d.diplomaCourse}</div>
+      </div>
+    ` : ''}
+
+    <div class="grid" style="margin-top: 10px;">
+      ${d.higherSecondarySchool ? `
+        <div class="data-item">
+          <span class="data-label">Hr. Secondary School</span>
+          <span class="data-value">${d.higherSecondarySchool} ${d.hscStream ? `(${d.hscStream})` : ''}</span>
+        </div>
+      ` : ''}
+      <div class="data-item">
+        <span class="data-label">High School (Class 10)</span>
+        <span class="data-value">${d.highSchool}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Middle School</span>
+        <span class="data-value">${d.middleSchool}</span>
+      </div>
+      <div class="data-item">
+        <span class="data-label">Primary School</span>
+        <span class="data-value">${d.primarySchool}</span>
+      </div>
+    </div>
+  </div>
+
+  ${!d.isFresher && d.experiences?.length > 0 ? `
+    <div class="section">
+      <h2 class="section-title">Work Experience</h2>
+      ${d.experiences.map(exp => `
+        <div class="experience-item">
+          <div class="item-header">
+            <span class="item-title">${exp.jobTitle}</span>
+            <span class="item-meta">${exp.fromMonth} ${exp.fromYear} — ${exp.toMonth} ${exp.toYear}</span>
+          </div>
+          <div class="data-value" style="font-size: 9pt; margin-top: 4px;">${exp.description}</div>
+          ${exp.referenceName ? `
+            <div style="margin-top: 8px; border-top: 1px solid #eee; pt: 4px;">
+              <span class="data-label" style="font-size: 7pt;">Reference:</span>
+              <span class="data-value" style="font-size: 8pt;">${exp.referenceName} (${exp.referencePhone})</span>
+            </div>
+          ` : ''}
+        </div>
+      `).join('')}
+    </div>
+  ` : ''}
+
+  <div class="section">
+    <h2 class="section-title">Skills & Extracurriculars</h2>
+    <div class="grid">
+      <div class="data-item full-width">
+        <span class="data-label">Languages Known</span>
+        <div class="badges">
+          ${d.languages?.map(l => `<span class="badge">${l.name} (${l.proficiency})</span>`).join('') || '<span class="data-value">—</span>'}
+        </div>
+      </div>
+      ${d.sports?.name ? `
+        <div class="data-item">
+          <span class="data-label">Sports</span>
+          <span class="data-value">${d.sports.name} ${d.sports.description ? `(${d.sports.description})` : ''}</span>
+        </div>
+      ` : ''}
+      ${d.music?.name ? `
+        <div class="data-item">
+          <span class="data-label">Music</span>
+          <span class="data-value">${d.music.name} ${d.music.description ? `(${d.music.description})` : ''}</span>
+        </div>
+      ` : ''}
+      ${d.arts?.name ? `
+        <div class="data-item">
+          <span class="data-label">Fine/Performing Arts</span>
+          <span class="data-value">${d.arts.name} ${d.arts.description ? `(${d.arts.description})` : ''}</span>
+        </div>
+      ` : ''}
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <p><strong>Place:</strong> __________________</p>
+      <p style="margin-top: 4px;"><strong>Date:</strong> ${appliedDate}</p>
+    </div>
+    <div>
+      <div class="signature-line">Applicant Signature</div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  const win = window.open('', '_blank', 'width=900,height=1000');
   win.document.write(html);
   win.document.close();
   win.focus();
-  setTimeout(() => { win.print(); }, 600);
+  setTimeout(() => { win.print(); }, 800);
 };
 
 /* ── View Applicant Modal ───────────────────── */
@@ -617,7 +841,7 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
       style={{ background: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-white h-full w-full max-w-xl flex flex-col shadow-2xl animate-fade-in overflow-hidden">
+      <div className="bg-white h-full w-full max-w-4xl flex flex-col shadow-2xl animate-fade-in overflow-hidden">
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-4 border-b border-border shrink-0">
           <div>
@@ -645,99 +869,221 @@ const ViewApplicantModal = ({ app, jobTitle, onClose }) => {
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <SectionHead title="Personal Information" />
-          <Row label="Full Name" value={name} />
-          <Row label="Email" value={d.email || app.applicant?.email} />
-          <Row label="Phone" value={d.phone} />
-          <Row label="Date of Birth" value={d.dob} />
-          <Row label="Gender" value={d.gender} />
-          <Row label="Nationality" value={d.nationality} />
-          <Row label="Ethnicity" value={d.ethnicity} />
-          <Row label="Religion" value={d.religion} />
-          <Row label="Category" value={d.category} />
-          <Row label="Address" value={d.address} />
-          <Row label="Marital Status" value={d.maritalStatus} />
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            {/* Left Column: Personal & Family */}
+            <div className="space-y-8">
+              <section>
+                <SectionHead title="Personal Details" />
+                <div className="space-y-1">
+                  <Row label="Full Name" value={name} />
+                  <Row label="Email Address" value={d.email || app.applicant?.email} />
+                  <Row label="Phone Number" value={d.phone} />
+                  <Row label="Date of Birth" value={d.dob} />
+                  <Row label="Gender" value={d.gender} />
+                  <Row label="Nationality" value={d.nationality} />
+                  <Row label="Ethnicity" value={d.ethnicity} />
+                  <Row label="Religion" value={d.religion} />
+                  <Row label="Category" value={d.category} />
+                  <Row label="Marital Status" value={d.maritalStatus} />
+                  <Row label="Permanent Address" value={d.address} />
+                </div>
+              </section>
 
-          {Array.isArray(d.languages) && d.languages.length > 0 && (
-            <>
-              <SectionHead title="Languages" />
-              {d.languages.map((l, i) => (
-                <Row key={i} label={l.name || `Language #${i + 1}`} value={l.proficiency} />
-              ))}
-            </>
-          )}
+              <section>
+                <SectionHead title="Family Information" />
+                <div className="space-y-1">
+                  <Row label="Father's Name" value={d.fatherName} />
+                  <Row label="Father's Contact" value={d.fatherPhone} />
+                  <Row label="Mother's Name" value={d.motherName} />
+                  <Row label="Mother's Contact" value={d.motherPhone} />
+                </div>
+              </section>
 
-          {(d.sports?.name || d.music?.name || d.arts?.name) && (
-            <>
-              <SectionHead title="Extracurriculars" />
-              {d.sports?.name && <Row label="Sports" value={`${d.sports.name}${d.sports.description ? ` (${d.sports.description})` : ''}`} />}
-              {d.music?.name && <Row label="Music" value={`${d.music.name}${d.music.description ? ` (${d.music.description})` : ''}`} />}
-              {d.arts?.name && <Row label="Arts" value={`${d.arts.name}${d.arts.description ? ` (${d.arts.description})` : ''}`} />}
-            </>
-          )}
+              {Array.isArray(d.languages) && d.languages.length > 0 && (
+                <section>
+                  <SectionHead title="Languages Known" />
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {d.languages.map((l, i) => (
+                      <div key={i} className="px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-lg text-sm">
+                        <span className="font-semibold text-blue-700">{l.name}</span>
+                        <span className="mx-1 text-blue-400">·</span>
+                        <span className="text-blue-600 text-xs font-medium uppercase tracking-wider">{l.proficiency}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-          <SectionHead title="Family" />
-          <Row label="Father's Name" value={d.fatherName} />
-          <Row label="Father's Phone" value={d.fatherPhone} />
-          <Row label="Mother's Name" value={d.motherName} />
-          <Row label="Mother's Phone" value={d.motherPhone} />
+              {(d.sports?.name || d.music?.name || d.arts?.name) && (
+                <section>
+                  <SectionHead title="Extracurriculars" />
+                  <div className="space-y-3 mt-2">
+                    {d.sports?.name && (
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <p className="text-[10px] font-bold text-text-xmuted uppercase tracking-widest mb-1">Sports</p>
+                        <p className="text-sm font-semibold">{d.sports.name}</p>
+                        {d.sports.description && <p className="text-xs text-text-muted mt-1">{d.sports.description}</p>}
+                      </div>
+                    )}
+                    {d.music?.name && (
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <p className="text-[10px] font-bold text-text-xmuted uppercase tracking-widest mb-1">Music</p>
+                        <p className="text-sm font-semibold">{d.music.name}</p>
+                        {d.music.description && <p className="text-xs text-text-muted mt-1">{d.music.description}</p>}
+                      </div>
+                    )}
+                    {d.arts?.name && (
+                      <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <p className="text-[10px] font-bold text-text-xmuted uppercase tracking-widest mb-1">Fine/Performing Arts</p>
+                        <p className="text-sm font-semibold">{d.arts.name}</p>
+                        {d.arts.description && <p className="text-xs text-text-muted mt-1">{d.arts.description}</p>}
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+            </div>
 
-          <SectionHead title="Educational Background" />
-          <Row label="Highest Qualification" value={d.highestQualification} />
-          <Row label="Field" value={d.discipline} />
-          <Row label="Primary School" value={d.primarySchool} />
-          <Row label="Middle School" value={d.middleSchool} />
-          <Row label="High School" value={d.highSchool} />
-          <Row label="Higher Secondary School" value={d.higherSecondarySchool} />
-          <Row label="Undergraduate Institute" value={d.undergraduateInstitute} />
-          {Array.isArray(d.postgraduates) && d.postgraduates.length > 0 ? (
-            d.postgraduates.map((pg, i) => (
-              <Row key={i} label={`Postgraduate #${i + 1}`} value={`${pg.institute} (${pg.course})`} />
-            ))
-          ) : (
-            <Row label="Postgraduate Institute" value={d.postgraduateInstitute} />
-          )}
+            {/* Right Column: Education & Experience */}
+            <div className="space-y-8">
+              <section>
+                <SectionHead title="Educational Background" />
+                <div className="space-y-3 mt-2">
+                  <div className="p-4 bg-accent/5 border border-accent/10 rounded-xl">
+                    <Row label="Highest Qual" value={d.highestQualification} />
+                    <Row label="Field" value={d.discipline} />
+                  </div>
+                  
+                  {Array.isArray(d.postgraduates) && d.postgraduates.map((pg, i) => (
+                    <div key={i} className="p-4 bg-gray-50 border border-gray-100 rounded-xl">
+                      <p className="text-[10px] font-bold text-accent uppercase tracking-widest mb-1">Postgraduate</p>
+                      <p className="text-sm font-bold">{pg.institute}</p>
+                      <p className="text-xs text-text-muted">{pg.course}</p>
+                    </div>
+                  ))}
 
-          <SectionHead title="Work Experience" />
-          <div className="py-2.5 border-b border-border">
-            <p className="text-xs text-text-xmuted mb-1">Experience</p>
-            <p className="text-sm text-text whitespace-pre-wrap">{d.experience || '—'}</p>
+                  {d.undergraduateInstitute && (
+                    <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl">
+                      <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Undergraduate</p>
+                      <p className="text-sm font-bold">{d.undergraduateInstitute}</p>
+                      <p className="text-xs text-text-muted">{d.ugCourse || 'Bachelors'}</p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-1">
+                    <Row label="Class 12 / HSC" value={d.higherSecondarySchool} />
+                    {d.hscStream && <Row label="HSC Stream" value={d.hscStream} />}
+                    <Row label="Class 10 / High School" value={d.highSchool} />
+                    <Row label="Middle School" value={d.middleSchool} />
+                    <Row label="Primary School" value={d.primarySchool} />
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <SectionHead title="Work Experience" />
+                <div className="space-y-4 mt-2">
+                  {d.isFresher ? (
+                    <div className="py-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                      <p className="text-sm text-text-muted font-medium italic">Candidate is a fresher</p>
+                    </div>
+                  ) : Array.isArray(d.experiences) && d.experiences.length > 0 ? (
+                    d.experiences.map((exp, i) => (
+                      <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-100">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-bold text-text">{exp.jobTitle}</h4>
+                          <span className="text-[10px] font-bold px-2 py-1 bg-white rounded-md border border-gray-100 text-text-muted whitespace-nowrap">
+                            {exp.fromMonth} {exp.fromYear} — {exp.toMonth} {exp.toYear}
+                          </span>
+                        </div>
+                        <p className="text-sm text-text-2 whitespace-pre-wrap mb-3 leading-relaxed">{exp.description}</p>
+                        {exp.referenceName && (
+                          <div className="pt-2 border-t border-gray-200 flex items-center gap-4">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-text-xmuted">Ref</span>
+                            <p className="text-xs text-text font-medium">
+                              {exp.referenceName} · <span className="text-text-muted">{exp.referencePhone}</span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                      <p className="text-sm text-text leading-relaxed">{d.experience || '—'}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              <section>
+                <SectionHead title="Internal Status" />
+                <div className="bg-slate-900 p-5 rounded-2xl text-white grid grid-cols-2 gap-6 mt-2">
+                  <div>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Applied Date</p>
+                    <p className="text-sm font-semibold">{app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Application ID</p>
+                    <p className="text-[11px] font-mono font-medium text-slate-300 break-all">{app._id}</p>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
-          <Row label="Reference Name" value={d.referenceeName} />
-          <Row label="Reference Phone" value={d.referencePhone} />
 
-          <SectionHead title="Application Details" />
-          <Row label="Applied On" value={app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—'} />
-          <Row label="Application ID" value={app._id} />
 
-          <SectionHead title="Message Applicant" />
-          <div className="pt-2">
-            <textarea
-              rows={3}
-              className="input resize-none mb-2"
-              placeholder="Type a message (e.g. Next steps, Interview details)..."
-              value={msg}
-              onChange={(e) => setMsg(e.target.value)}
-            />
-            <button
-              disabled={sendingMsg || !msg.trim()}
-              onClick={async () => {
-                setSendingMsg(true);
-                try {
-                  await axios.post(`${API}/applications/${app._id}/message`, { message: msg, sentBy: 'RECRUITER' });
-                  setMsg('');
-                  alert('Message sent successfully.');
-                } catch (err) {
-                  alert('Failed to send message.');
-                } finally {
-                  setSendingMsg(false);
-                }
-              }}
-              className="btn-outline text-xs py-1.5 px-3"
-            >
-              {sendingMsg ? 'Sending...' : 'Send Message'}
-            </button>
+          <SectionHead title="Communication" />
+          <div className="mt-2">
+            {!app.applicant ? (
+              <div className="p-5 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                  <Mail size={18} className="text-amber-700" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-amber-900">Guest Applicant</p>
+                  <p className="text-xs text-amber-700 leading-relaxed mt-1">
+                    This candidate applied without a Connich account. You must contact them directly via email at 
+                    <span className="font-bold ml-1">{d.email || 'their provided address'}</span> for any updates or interview requests.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-5 bg-gray-50 border border-gray-100 rounded-xl">
+                <p className="text-xs font-bold text-text-xmuted uppercase tracking-widest mb-3">Send Dashboard Message</p>
+                <textarea
+                  rows={3}
+                  className="input resize-none mb-3 bg-white border-gray-200"
+                  placeholder="Type a message (e.g. Next steps, Interview details)..."
+                  value={msg}
+                  onChange={(e) => setMsg(e.target.value)}
+                />
+                <div className="flex justify-between items-center">
+                  <p className="text-[10px] text-text-muted italic max-w-[240px]">
+                    This message will appear on the candidate's personal dashboard.
+                  </p>
+                  <button
+                    disabled={sendingMsg || !msg.trim()}
+                    onClick={async () => {
+                      setSendingMsg(true);
+                      try {
+                        await axios.post(`${API}/applications/${app._id}/message`, { message: msg, sentBy: 'RECRUITER' });
+                        setMsg('');
+                        alert('Message sent successfully.');
+                      } catch (err) {
+                        alert('Failed to send message.');
+                      } finally {
+                        setSendingMsg(false);
+                      }
+                    }}
+                    className="btn-primary py-2 px-4 text-xs font-bold shadow-sm"
+                  >
+                    {sendingMsg ? 'Sending...' : 'Send Message'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
